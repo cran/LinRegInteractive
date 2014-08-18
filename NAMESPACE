@@ -1,0 +1,6 @@
+import("rpanel")
+export(
+  "glm.interactive",
+  "lm.interactive",
+  "factor.combinations"
+)
