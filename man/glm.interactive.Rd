@@ -8,7 +8,7 @@ The function is based on the package \href{http://CRAN.R-project.org/package=rpa
 }
 \usage{
 glm.interactive(model, initial.values = as.list(NULL), preselect.var = NA,
-    preselect.type = "link", selecet.all.groups.begin = TRUE, 
+    preselect.type = "link", preselect.groups = NULL,
     dev.height = 18, dev.width = 18, dev.width.legend = 8, dev.pointsize = 10,
     dev.defined = FALSE, col = NA, lty = 1, lwd = 1, main = NA, xlab = NA, ylab = NA,
     legend.add = TRUE, legend.space = legend.add, legend.only = FALSE, 
@@ -31,7 +31,7 @@ glm.interactive(model, initial.values = as.list(NULL), preselect.var = NA,
 \item{initial.values}{Initial values for the metric covariates in a named list, default to the means. See section 6 of the vignette and examples below.}
 \item{preselect.var}{Name of continous variable to be displayed as character or \code{NA} (default) for menu selection.}
 \item{preselect.type}{The type of the initial plot to be displayed. Must be one of the values \code{"link"} (default), \code{"response"} or \code{"marginal"}.}
-\item{selecet.all.groups.begin}{Select all groups at the beginning? Default to \code{TRUE}. If set to \code{FALSE}, only the first group is selected.}
+\item{preselect.groups}{Numeric vector with the index of the groups which are displayed in the initial plot. If \code{NULL} (the default) all groups are displayed.}
 \item{dev.height}{Height of graphic device in cm, default to \code{18}.}
 \item{dev.width}{Width of plot area in graphic device in cm, default to \code{18}.}
 \item{dev.width.legend}{Width of legend area in graphic device in cm, default to \code{8}.}
@@ -176,6 +176,10 @@ glm.interactive(model.cd, rug.ticksize=NA)
 
 ## Set initial values of metric covatiates 
 glm.interactive(model.cd, initial.values=list(amount=5000, age=30, duration=24))
+
+## Preselect covariate, plot type and groups
+glm.interactive(model.cd, preselect.var="duration", preselect.type="response",
+    preselect.groups=c(2,5))
 
 ## Preselect covariate and plot type and change axis annotations
 glm.interactive(model.cd, preselect.var="duration", preselect.type="response", 

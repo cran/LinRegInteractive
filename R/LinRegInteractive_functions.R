@@ -4,7 +4,7 @@ lm.interactive <- function(model, # object of class lm is mandatory
 		initial.values           = as.list(NULL), # Initial values for the metric covariates in a named list, default to the means. See details.
 		preselect.var            = NA, # Name of continous variable to be displayed as character or NA for menu selection, default to NA.
 		preselect.type           = "effect",
-		selecet.all.groups.begin = TRUE, # Select all groups at the beginning? If set to FALSE, only the first group is selected. Default to TRUE.
+		preselect.groups 		     = NULL, # Index of groups to be preselectes. If set to NULL (default) all groups are preselected.
 		
 		## Parameters for plot layout ##
 		dev.height          = 18,	 # Height of graphic device in cm.
@@ -109,7 +109,7 @@ lm.interactive <- function(model, # object of class lm is mandatory
 		num.groups  <- prod(num.level)
 		
 		# build all factor combinations
-		factor.comb <- factor.combinations(X.factor, factor.sep=factor.sep, level.sep=level.sep)
+		factor.comb <- factor.combinations(X.factor, factor.sep=factor.sep, level.sep=level.sep, count=FALSE)
 	}
 	
 	# If not specified in the function call: if there is only one continous covariate, choose it. 
@@ -163,20 +163,20 @@ lm.interactive <- function(model, # object of class lm is mandatory
 	{	
 		if(legend.only)
 		{# Initialize device for legend only
-			dev.new(width=dev.width.legend/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=FALSE, noRStudioGD = TRUE)
+			dev.new(width=dev.width.legend/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=TRUE, noRStudioGD = TRUE)
 			par(cex=1, ...)
 		}else
 		{# If factors are used as covariates and legend should be printed, split plot region via layout()	
 			if(factors.present & legend.space)
 			{
-				dev.new(width=(dev.width + dev.width.legend)/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=FALSE, noRStudioGD = TRUE)
+				dev.new(width=(dev.width + dev.width.legend)/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=TRUE, noRStudioGD = TRUE)
 				fraction.plot <- round((dev.width/(dev.width + dev.width.legend))*100, digits=0)
 				layoutmatrix  <- matrix(c(rep(2, fraction.plot), rep(1, (100-fraction.plot))),1,100)
 				layout(layoutmatrix)
 				par(cex=1, ...)
 			}else
 			{
-				dev.new(width=dev.width/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=FALSE, noRStudioGD = TRUE)
+				dev.new(width=dev.width/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=TRUE, noRStudioGD = TRUE)
 				par(cex=1, ...)
 			}
 		}
@@ -189,47 +189,54 @@ lm.interactive <- function(model, # object of class lm is mandatory
 	func.panel.action <- function(panel) 
 	{# Main panel function, must be defined within the namespace where panel is established
 		# read plot type from panel
-		if(length(panel$type)==0) # in the first call of the panel the slots are NULL   
-		{
+		if(length(panel$type)==0) # in the first call of the panel the slots are sometimes NULL   
+			{
 			type.actual <- "effect"
-		}else
-		{
+			}else
+			{
 			type.actual <- panel$type
-		}
+			}
 		
 		# read group selection from panel if groups are present
 		if(factors.present)
-		{
-			if(length(panel$groups)==0) # in the first call of the panel the slots are NULL 
 			{
-				if(selecet.all.groups.begin)
-				{
-					logical.index.groups  <- rep(TRUE, times = num.groups)
+			if(length(panel$groups)==0) 
+				{# in the first call of the panel the slots are sometimes NULL 
+				if(is.null(preselect.groups))
+					{
+					logical.index.groups  <- rep(TRUE, times=num.groups)
+					}else
+					{
+					logical.index.groups  <- rep(FALSE, times=num.groups)
+					logical.index.groups[preselect.groups]  <- TRUE
+					}
+				index.groups.selected <- c(1:num.groups)[logical.index.groups]
+				# if all groups are deselected choose the first
+				if(sum(logical.index.groups)==0)
+					{
+					index.groups.selected  <- 1  
+					}
 				}else
 				{
-					logical.index.groups  <- 1 # select only first group
-				}
-			}else
-			{
-				logical.index.groups <- panel$groups
-				
-				# if all groups are deselected choose only the first group
+				logical.index.groups  <- panel$groups
+				index.groups.selected <- c(1:num.groups)[logical.index.groups]
+			
+				# if all groups are deselected choose the first
 				if(sum(logical.index.groups)==0)
-				{
-					logical.index.groups  <- 1  
+					{
+					index.groups.selected  <- 1  
+					}
 				}
-				
-			}
-		}
-		
+			}# end if factors.present	
+			
 		# read value of actual variable from panel
 		if(length(panel$var.selected.act)==0)
-		{
+		    {
 			var.selected.act <- 1
-		}else
-		{
+			}else
+			{
 			var.selected.act <- panel$var.selected.act      
-		}   
+			}   
 		
 		# build designmatrix for predict-method from continous covariates
 		if(single.covariate)
@@ -254,7 +261,6 @@ lm.interactive <- function(model, # object of class lm is mandatory
 		if(factors.present)
 		{
 			# calculate predictions for each selected group
-			index.groups.selected <- c(1:num.groups)[logical.index.groups]
 			list.groups <- as.list(NULL)
 			for(i in seq(along=index.groups.selected))
 			{
@@ -298,9 +304,9 @@ lm.interactive <- function(model, # object of class lm is mandatory
 				effect = limits.y <- c(min(unlist(lapply(list.groups,"[",2))), max(unlist(lapply(list.groups,"[",2)))),
 				marginal = limits.y <- c(min(unlist(lapply(list.groups,"[",2))), max(unlist(lapply(list.groups,"[",2))))
 		)
-		
+
+		### Plotting commands ###
 		# draw effects for each and every group
-		
 		# when no factors are present set number of groups to 1 for correct color handling
 		if(!factors.present) num.groups <- 1
 		# specify color scheme
@@ -315,6 +321,8 @@ lm.interactive <- function(model, # object of class lm is mandatory
 		lty.types <- rep(lty, times=num.groups)
 		lwd.types <- rep(lwd, times=num.groups)
 		
+		# in conjunction with dev.flush() and buffered=TRUE animation is more fluent
+		dev.hold()
 		
 		if(factors.present & legend.only)
 		{# When legend.only is active plot legend only
@@ -376,7 +384,10 @@ lm.interactive <- function(model, # object of class lm is mandatory
 					effect 	 = abline(h=pos.hline.effect),
 					marginal = abline(h=pos.hline.marginal))	
 		}# end if legend.only
-				
+		
+		# in conjunction with dev.hold() and buffered=TRUE animation is more fluent
+		dev.flush()
+		
 		# When autosave is activated directly save the plot
 		if(autosave.plot)
 			{
@@ -831,9 +842,18 @@ lm.interactive <- function(model, # object of class lm is mandatory
 		
 	# Checkbox for groups, if factors are employed in the model
 	if(factors.present)
-		{	
+		{
+		if(is.null(preselect.groups))
+			{
+			init.logical.index.groups  <- rep(TRUE, times=num.groups)
+			}else
+			{
+			init.logical.index.groups  <- rep(FALSE, times=num.groups)
+			init.logical.index.groups[preselect.groups]  <- TRUE
+			}
+			
 		# Cheat R CMD check	
-	    checkbox.call <- "rp.checkbox(panel=mainpanel, variable=groups, action = func.panel.action, initval=rep(selecet.all.groups.begin, times=num.groups),
+	    checkbox.call <- "rp.checkbox(panel=mainpanel, variable=groups, action = func.panel.action, initval=init.logical.index.groups,
                           labels = factor.comb$names, title = label.box.groups, pos = c(box.pos.x, box.groups.pos.y, boxes.width, box.group.height))"
 		eval(parse(text=checkbox.call)) 
 		}
@@ -851,7 +871,7 @@ glm.interactive <- function(model, # object of class glm is mandatory
 		initial.values           = as.list(NULL), # Initial values for the metric covariates in a named list, default to the means. See details.
 		preselect.var            = NA, # Name of continous variable to be displayed as character or NA for menu selection, default to NA.
 		preselect.type           = "link",
-		selecet.all.groups.begin = TRUE, # Select all groups at the beginning? If set to FALSE, only the first group is selected. Default to TRUE.
+		preselect.groups 		 = NULL, # Index of groups to be preselectes. If set to NULL (default) all groups are preselected.
 		
 		## Parameters for plot layout ##
 		dev.height          = 18,	 # Height of graphic device in cm.
@@ -956,7 +976,7 @@ glm.interactive <- function(model, # object of class glm is mandatory
 		num.groups  <- prod(num.level)
 		
 		# build all factor combinations
-		factor.comb <- factor.combinations(X.factor, factor.sep=factor.sep, level.sep=level.sep)
+		factor.comb <- factor.combinations(X.factor, factor.sep=factor.sep, level.sep=level.sep, count=FALSE)
 		}
 	
 	# If not specified in the function call: if there is only one continous covariate, choose it. 
@@ -1010,20 +1030,20 @@ glm.interactive <- function(model, # object of class glm is mandatory
 		{	
 		if(legend.only)
 			{# Initialize device for legend only
-			dev.new(width=dev.width.legend/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=FALSE, noRStudioGD = TRUE)
+			dev.new(width=dev.width.legend/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=TRUE, noRStudioGD = TRUE)
 			par(cex=1, ...)
 			}else
 			{# If factors are used as covariates and legend should be printed, split plot region via layout()	
 			if(factors.present & legend.space)
 				{
-				dev.new(width=(dev.width + dev.width.legend)/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=FALSE, noRStudioGD = TRUE)
+				dev.new(width=(dev.width + dev.width.legend)/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=TRUE, noRStudioGD = TRUE)
 				fraction.plot <- round((dev.width/(dev.width + dev.width.legend))*100, digits=0)
 				layoutmatrix  <- matrix(c(rep(2, fraction.plot), rep(1, (100-fraction.plot))),1,100)
 				layout(layoutmatrix)
 				par(cex=1, ...)
 				}else
 				{
-				dev.new(width=dev.width/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=FALSE, noRStudioGD = TRUE)
+				dev.new(width=dev.width/2.54, height=dev.height/2.54, pointsize=dev.pointsize, buffered=TRUE, noRStudioGD = TRUE)
 				par(cex=1, ...)
 			 	}
 			}
@@ -1035,33 +1055,46 @@ glm.interactive <- function(model, # object of class glm is mandatory
 	#############################################
 	func.panel.action <- function(panel) 
 		{# Main panel function, must be defined within the namespace where panel is established
-		# read plot type from panel 
-		type.actual <- panel$type
+		# read plot type from panel
+		if(length(panel$type)==0) # in the first call of the panel the slots are sometimes NULL   
+			{
+			type.actual <- "link"
+			}else
+			{
+			type.actual <- panel$type
+			}
 			
 		# read group selection from panel if groups are present
 		if(factors.present)
-		{
-			if(length(panel$groups)==0) # in the first call of the panel the slots are NULL 
 			{
-				if(selecet.all.groups.begin)
-				{
-					logical.index.groups  <- rep(TRUE, times = num.groups)
+			if(length(panel$groups)==0) 
+				{# in the first call of the panel the slots are sometimes NULL 
+				if(is.null(preselect.groups))
+					{
+					logical.index.groups  <- rep(TRUE, times=num.groups)
+					}else
+					{
+					logical.index.groups  <- rep(FALSE, times=num.groups)
+					logical.index.groups[preselect.groups]  <- TRUE
+					}
+				index.groups.selected <- c(1:num.groups)[logical.index.groups]
+				# if all groups are deselected choose the first
+				if(sum(logical.index.groups)==0)
+					{
+					index.groups.selected  <- 1  
+					}
 				}else
 				{
-					logical.index.groups  <- 1 # select only first group
-				}
-			}else
-			{
-				logical.index.groups <- panel$groups
-				
-				# if all groups are deselected choose only the first group
+				logical.index.groups  <- panel$groups
+				index.groups.selected <- c(1:num.groups)[logical.index.groups]
+					
+				# if all groups are deselected choose the first
 				if(sum(logical.index.groups)==0)
-				{
-					logical.index.groups  <- 1  
+					{
+					index.groups.selected  <- 1  
+					}
 				}
-				
-			}
-		}
+			}# end if factors.present
 		
 		# read value of actual variable from panel
 		if(length(panel$var.selected.act)==0)
@@ -1095,7 +1128,6 @@ glm.interactive <- function(model, # object of class glm is mandatory
 		if(factors.present)
 		{
 			# calculate predictions for each selected group
-			index.groups.selected <- c(1:num.groups)[logical.index.groups]
 			list.groups <- as.list(NULL)
 			for(i in seq(along=index.groups.selected))
 			{
@@ -1157,6 +1189,9 @@ glm.interactive <- function(model, # object of class glm is mandatory
 		
 		lty.types <- rep(lty, times=num.groups)
 		lwd.types <- rep(lwd, times=num.groups)
+		
+		# in conjunction with dev.flush() and buffered=TRUE animation is more fluent
+		dev.hold()
 	
 		if(factors.present & legend.only)
 			{# When legend.only is active plot legend only
@@ -1219,7 +1254,10 @@ glm.interactive <- function(model, # object of class glm is mandatory
 					marginal = abline(h=pos.hline.marginal))
 			
 			}# end if legend.only
-				
+		
+		# in conjunction with dev.hold() and buffered=TRUE animation is more fluent
+		dev.flush()
+			
 		# When autosave is activated directly save the plot
 		if(autosave.plot)
 			{
@@ -1347,7 +1385,7 @@ glm.interactive <- function(model, # object of class glm is mandatory
 		
 		names(F.x.continous) <- colnames(X.continous)
 		
-		colnames(output.me) <- paste("marg.eff.",colnames(X.continous),sep="")
+		colnames(output.me) <- paste("marg.eff.", colnames(X.continous), sep="")
 		
 		if(factors.present)
 		{
@@ -1678,9 +1716,18 @@ glm.interactive <- function(model, # object of class glm is mandatory
 		
 	# Checkbox for groups, if factors are employed in the model
 	if(factors.present)
-	    {	
+	    {
+		if(is.null(preselect.groups))
+			{
+			init.logical.index.groups  <- rep(TRUE, times=num.groups)
+			}else
+			{
+			init.logical.index.groups  <- rep(FALSE, times=num.groups)
+			init.logical.index.groups[preselect.groups]  <- TRUE
+			}	
+			
 		# Cheat R CMD check	
-		checkbox.call <- "rp.checkbox(panel=mainpanel, variable=groups, action = func.panel.action, initval=rep(selecet.all.groups.begin, times=num.groups),
+		checkbox.call <- "rp.checkbox(panel=mainpanel, variable=groups, action = func.panel.action, initval=init.logical.index.groups,
                           labels = factor.comb$names, title = label.box.groups, pos = c(box.pos.x, box.groups.pos.y, boxes.width, box.group.height))"
 		eval(parse(text=checkbox.call)) 
 	    }		
@@ -1713,94 +1760,93 @@ wrap.rp.slider <- function(panel, variable, from, to, action, title=NA,
 	}
 
 
-factor.combinations <- function(X, factor.sep="-", level.sep=".")
+factor.combinations <- function(X, factor.sep="-", level.sep=".", count=TRUE)
 	{
 	logicalindex.factors <- sapply(X, is.factor)
 	if(!any(logicalindex.factors)) stop("no factors in data.frame")
 	
 	X.factor <- X[,logicalindex.factors, drop=FALSE]
 	if(dim(X.factor)[2]==1)
-	{# just a single factor in the covariates, groups are the factor levels 
-		factorgroup <- data.frame(matrix(levels(X.factor[,1]),nrow=length(levels(X.factor[,1]))))
+		{# just a single factor in the covariates, groups are the factor levels 
+		factorgroup <- data.frame(levels(X.factor[,1]))
 		colnames(factorgroup) <- colnames(X.factor)
 		
-		groups.names <- as.vector(NULL)
-		for(i in 1:dim(factorgroup)[1])
-		{
-			name.actual      <- paste(colnames(factorgroup)[1], factorgroup[i,1], sep=level.sep)
-			groups.names <- c(groups.names, name.actual)
-		}
+		groups.names <- paste(colnames(factorgroup)[1], factorgroup[,1], sep=level.sep)
 		
 		# count occurences of levels
 		groups.counts <- as.vector(table(X.factor))
 		
 		output <- list(comb=factorgroup, names=groups.names, counts=groups.counts)
 		return(output)
-	}
+		}
 	
-	# for more than one factor build groups from levels of each factor  
-	for(j in 1:dim(X.factor)[2])
-	{
-		if(j==1)
-		{# pick levels from first factor
-			vec <- levels(X.factor[,1])
-			# calculate number of combinations
-			num.comb <- length(levels(X.factor[,1])) 
-			next
-		}else
+	factor.levels 	  <- lapply(X.factor, levels)
+	num.factor.levels <- sapply(factor.levels, length)
+	num.factors       <- dim(X.factor)[2]
+	
+	# first factor
+	fac.act <- rep(factor.levels[[1]], each=prod(tail(num.factor.levels,-1)))
+	factorgroups <- data.frame(fac.act)
+	
+	for(j in c(2:num.factors))
 		{
-			# calculate number of combinations
-			num.comb <- num.comb*length(levels(X.factor[,j]))   
-			vec.old <- vec  
-		}
+		if(j==num.factors)
+			{# for the last factor
+			num.rep <- 1	
+			}else
+			{	
+			num.rep      <- prod(tail(num.factor.levels,-j))
+			}
 		
-		vec <- NULL
-		for(i in vec.old)
-		{# combine given factor combinations with levels from next factor
-			vec <- c(vec, paste(i, levels(X.factor[,j]), sep=level.sep))
+		fac.act      <- rep(factor.levels[[j]], each=num.rep)
+		factorgroups <- cbind(factorgroups, fac.act)
 		}
-	}
 	
-	# turn into a data.frame
-	factorgroups <- data.frame(matrix(unlist(strsplit(vec, level.sep, fixed = TRUE)), nrow= num.comb, byrow=TRUE))
 	colnames(factorgroups) <- colnames(X.factor)
-  
-	# check for orderd factors and assign order to corresponding column
+	
+	# check for orderd factors and if so assign order to corresponding column
 	for(j in 1:dim(X.factor)[2])
-	  {
-	  if(is.ordered(X.factor[,j]))
-	    {
-	    factorgroups[,j] <- factor(factorgroups[,j], levels=levels(X.factor[,j]), ordered = TRUE)
-	    }
-	  }
+		{
+		if(is.ordered(X.factor[,j]))
+			{
+			factorgroups[,j] <- factor(factorgroups[,j], levels=levels(X.factor[,j]), ordered = TRUE)
+			}
+		}
 	
 	# build group names from factor combinations
 	groups.names <- as.vector(NULL)
 	for(i in 1:dim(factorgroups)[1])
-	{
+		{
 		groups.name <- as.vector(NULL)
 		for(j in 1:dim(factorgroups)[2])
-		{
+			{
 			groups.name.actual <- paste(colnames(factorgroups)[j],factorgroups[i,j],sep=level.sep)
 			groups.name <- paste(groups.name, groups.name.actual, sep=factor.sep)
-		}
+			}
 		groups.name <- substring(groups.name,2)
 		groups.names <- c(groups.names,groups.name)
-	}
+		}
 	
 	# count occurences of groups
-	groups.counts <- as.vector(NULL)
-	for(i in 1:dim(factorgroups)[1])
-	{
-		vec.occur <- rep(1, times=dim(X.factor)[1])
-		for(j in 1:dim(factorgroups)[2])
+	if(count)
+		{	
+		num.groups    <- prod(num.factor.levels)
+		groups.counts <- as.vector(NULL)
+		for(i in 1:num.groups)
+			{
+			vec.occur <- rep(1, times=dim(X.factor)[1])
+			for(j in 1:num.factors)
+				{
+				dummyvec.act <- (X.factor[,j]==factorgroups[i,j])*1 
+				vec.occur    <- vec.occur*dummyvec.act
+				}
+			groups.counts.act <- sum(vec.occur)
+			groups.counts     <- c(groups.counts, groups.counts.act)				
+			}
+		}else
 		{
-			dummyvec.act <- (X.factor[,j]==factorgroups[i,j])*1 
-			vec.occur    <- vec.occur*dummyvec.act
+		groups.counts <- NULL
 		}
-		groups.counts.act <- sum(vec.occur)
-		groups.counts     <- c(groups.counts, groups.counts.act)				
-	}	
 	
 	output <- list(comb=factorgroups, names=groups.names, counts=groups.counts)
 	return(output)

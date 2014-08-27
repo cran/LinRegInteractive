@@ -12,8 +12,8 @@ The two main functions \code{\link{lm.interactive}} and \code{\link{glm.interact
 \tabular{ll}{
 Package: \tab LinRegInteractive\cr
 Type: \tab Package\cr
-Version: \tab 0.1-3\cr
-Date: \tab 2014-08-18\cr
+Version: \tab 0.2-1\cr
+Date: \tab 2014-08-27\cr
 License: \tab GPL-2\cr
 }
 }
