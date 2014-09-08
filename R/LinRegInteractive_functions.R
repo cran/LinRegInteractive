@@ -632,7 +632,7 @@ lm.interactive <- function(model, # object of class lm is mandatory
 				}
 				cat(" \\bottomrule ", sep="", fill=TRUE)
 				cat("\\end{tabular}", fill=TRUE)
-				cat("\\caption{Linear predictor and response in different groups at given values of metric covariates}", fill=TRUE)
+				cat("\\caption{Linear predictor and response in different groups for given values of metric covariates}", fill=TRUE)
 				cat("\\end{table}", fill=TRUE)
 				
 				# table of marginal effects
@@ -679,7 +679,7 @@ lm.interactive <- function(model, # object of class lm is mandatory
 				}
 				cat(" \\bottomrule ", sep="", fill=TRUE)
 				cat("\\end{tabular}", fill=TRUE)
-				cat("\\caption{Marginal effects in different groups at given values of metric covariates}", fill=TRUE)
+				cat("\\caption{Marginal effects in different groups for given values of metric covariates}", fill=TRUE)
 				cat("\\end{table}", fill=TRUE)
 			}else
 			{# latex output if no factors are present
@@ -695,7 +695,7 @@ lm.interactive <- function(model, # object of class lm is mandatory
 				}
 				cat(" \\bottomrule ", sep="", fill=TRUE)
 				cat("\\end{tabular}", fill=TRUE)
-				cat("\\caption{Linear predictor at given values of metric covariates}", fill=TRUE)
+				cat("\\caption{Linear predictor for given values of metric covariates}", fill=TRUE)
 				cat("\\end{table}", fill=TRUE)
 				
 				# table of marginal effects
@@ -741,7 +741,7 @@ lm.interactive <- function(model, # object of class lm is mandatory
 				}
 				cat(" \\bottomrule ", sep="", fill=TRUE)
 				cat("\\end{tabular}", fill=TRUE)
-				cat("\\caption{Marginal effects at given values of metric covariates}", fill=TRUE)
+				cat("\\caption{Marginal effects for given values of metric covariates}", fill=TRUE)
 				cat("\\end{table}", fill=TRUE)
 			}# end if factors.present
 		}# end if latex2console
@@ -1506,7 +1506,7 @@ glm.interactive <- function(model, # object of class glm is mandatory
 				}
 				cat(" \\bottomrule ", sep="", fill=TRUE)
 				cat("\\end{tabular}", fill=TRUE)
-				cat("\\caption{Linear predictor and response in different groups at given values of metric covariates}", fill=TRUE)
+				cat("\\caption{Linear predictor and response in different groups for given values of metric covariates}", fill=TRUE)
 				cat("\\end{table}", fill=TRUE)
 				
 				# table of marginal effects
@@ -1553,7 +1553,7 @@ glm.interactive <- function(model, # object of class glm is mandatory
 				}
 				cat(" \\bottomrule ", sep="", fill=TRUE)
 				cat("\\end{tabular}", fill=TRUE)
-				cat("\\caption{Marginal effects in different groups at given values of metric covariates}", fill=TRUE)
+				cat("\\caption{Marginal effects in different groups for given values of metric covariates}", fill=TRUE)
 				cat("\\end{table}", fill=TRUE)				
 			}else
 			{# latex output if no factors are present
@@ -1569,7 +1569,7 @@ glm.interactive <- function(model, # object of class glm is mandatory
 				}
 				cat(" \\bottomrule ", sep="", fill=TRUE)
 				cat("\\end{tabular}", fill=TRUE)
-				cat("\\caption{Linear predictor and response at given values of metric covariates}", fill=TRUE)
+				cat("\\caption{Linear predictor and response for given values of metric covariates}", fill=TRUE)
 				cat("\\end{table}", fill=TRUE)
 				
 				# table of marginal effects
@@ -1615,7 +1615,7 @@ glm.interactive <- function(model, # object of class glm is mandatory
 				}
 				cat(" \\bottomrule ", sep="", fill=TRUE)
 				cat("\\end{tabular}", fill=TRUE)
-				cat("\\caption{Marginal effects at given values of metric covariates}", fill=TRUE)
+				cat("\\caption{Marginal effects for given values of metric covariates}", fill=TRUE)
 				cat("\\end{table}", fill=TRUE)
 			}# end if factors.present
 		}# end if latex2console

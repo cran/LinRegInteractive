@@ -2,226 +2,228 @@
 %\VignetteKeyword{termplot}
 %\VignetteKeyword{interactive}
 %\VignettePackage{LinRegInteractive}
-\documentclass[abstract=on, 11pt, a4paper, numbers=noenddot]{scrartcl}
 
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenx}
-\usepackage[english]{babel}
-\usepackage[babel, autostyle]{csquotes}
-\usepackage{microtype}
-\usepackage{fixltx2e}
+\documentclass[nojss]{jss}
 
-\usepackage{graphicx}
-\usepackage{float}
-\usepackage{caption}
 \usepackage{enumitem}
 \usepackage{booktabs}
-\usepackage{natbib}
+\usepackage{float}
 
-\usepackage{url}
-\urlstyle{same}
+%% need no \usepackage{Sweave}
 
-\usepackage{geometry}
-\geometry{a4paper, left=20mm, right=20mm, top=20mm, bottom=25mm, includehead}
+\newcommand{\class}[1]{``\code{#1}''}
+\newcommand{\quotes}[1]{``#1''}
 
-\usepackage[headsepline]{scrpage2}
-\pagestyle{scrheadings}
-\ihead[]{\normalfont{LinRegInteractive 0.2-1}}
-\ohead[]{\pagemark}
-\cfoot[\pagemark]{}
+\SweaveOpts{engine=R, eps=FALSE, keep.source = TRUE}
+<<options, echo=FALSE>>=
+options(prompt = " ", continue = "     ", digits = 4, show.signif.stars = FALSE)
+@
 
-\title{LinRegInteractive: An \textsf{R} Package for the Interactive Interpretation of Linear Regression Models}
-\author{Martin Meermeyer\thanks{Bergische Universit\"at Wuppertal, Schumpeter School of Business and
-Economics,  Gaussstr.~20,  42119~Wuppertal,  e-mail:
-meermeyer@statistik.uni-wuppertal.de} \\ Schumpeter School of Business and Economics \\ Bergische Universit\"at Wuppertal}
-\date{27. August 2014} 
+%% almost as usual
+\author{Martin Meermeyer\\ Universit\"at Wuppertal}
+\Plainauthor{Martin Meermeyer}
+\title{\pkg{LinRegInteractive}: An \proglang{R} Package for the Interactive Interpretation of Linear Regression Models}
+\Plaintitle{LinRegInteractive: An R Package for the Interactive Interpretation of Linear Regression Models}
+\Shorttitle{\pkg{LinRegInteractive}: Interactive Interpretation of Linear Regression Models} 
 
-\usepackage[nogin]{Sweave}
+\Abstract{
+To facilitate the interpretation of binary response and multiple linear regression models the package provides two major functions, \code{glm.interactive()} and \code{lm.interactive()}, which allow to observe the effects of variations of metric covariates in an interactive manner by means of termplots. 
+Due to the interactive approach the functions provide an intuitive understanding of the mechanics of a particular model and are therefore especially useful for educational purposes.  
+Technically the functions are based on the package \pkg{rpanel} and the only mandatory argument is an appropriate fitted-model object. Given this, the linear predictors, the marginal effects and, for models with binary outcomes, the probabilities are calculated automatically. For the marginal effects a numerical approach is used to handle nonlinear effects automatically. If there are two or more categorical covariates the corresponding effects are presented in a novel way. For publication purposes the user can customize the appearance of the termplots to a large extent. Tables capturing the model output and the effects can be printed to the \proglang{R} Console, optionally as copy-and-paste-ready \LaTeX-code. 
+}
+\Keywords{termplots, marginal effects, binary dependent variables}
+
+%% publication information
+%% NOTE: Typically, this can be left commented and will be filled out by the technical editor
+%% \Volume{50}
+%% \Issue{9}
+%% \Month{June}
+%% \Year{2012}
+%% \Submitdate{2012-06-04}
+%% \Acceptdate{2012-06-04}
+
+%% The address of (at least) one author should be given
+%% in the following format:
+\Address{
+  Martin Meermeyer\\
+  Bergische Universit\"at Wuppertal\\
+  Schumpeter School of Business and
+  Economics\\
+  Gaussstr.~20\\
+  42119~Wuppertal, Germany\\
+  E-mail: \email{meermeyer@statistik.uni-wuppertal.de}\\
+  URL: \url{http://www.statistik.uni-wuppertal.de}\\
+}
 
 \begin{document}
-
-\maketitle
-\begin{abstract}
-The interpretation of the results for linear regression models with non-constant marginal effects can be tedious. For the multiple linear regression model this is the case when the covariates are incorporated in a nonparametric way. For binary response models this is true even for very simple linear link functions. Things becomes more complicated when categorical covariates are employed, especially when interaction effects between categorical covariates or between metric and categorical covariates are present.
-To facilitate the interpretation of such models the package provides two major functions, \texttt{glm.interactive()} and \texttt{lm.interactive()}, which allow the user to observe the effects of variations of the metric covariates in an interactive manner by means of termplots. 
-Due to this interactive approach the functions provide an intuition about the mechanics of a particular model and are therefore useful particularly for educational purposes.  
-Technically the functions are based on the package \textbf{rpanel} and the only mandatory argument is an appropriate fitted-model object. Given this, the linear predictors, the marginal effects and, for models with binary outcomes, the probabilities are calculated automatically. For the marginal effects a numerical approach is employed to handle nonlinear effects automatically. For printing purposes the user can customize the appearance of the termplots to a large extent. At the same time some tables capturing the model output can be printed to the \textsf{R Console}, optionally as copy-and-paste-ready \LaTeX-code. 
-\end{abstract}
-
-\section{Introduction}
-The function \texttt{glm.interactive()} was developed to put suggestions for the interpretation of logit and probit models made by \citet{Hoet2007} into practice. The \texttt{lm.interactive()} is a byproduct of this effort.  
-The implementation of the interactive GUI is based on the package \textbf{rpanel} \citep{BowmCrawAlex2007}. Printing \LaTeX-output to the console was inspired by the package \textbf{xtable} \citep{Dahl2012}, but an own implementation based on the \texttt{format()}-function is used. The noninteractive visualization of the results for various types of regression models can be done with the package \textbf{effects} \citep{Fox2003}.  
-
-\section{Basic idea} \label{sec-idea}
-Even in the case of a simple linear predictor the interpretation of binary response models is nontrivial due to the nonlinearity of the response functions and the resulting nonconstant marginal effects. As pointed out by \citet{Hoet2007} the interpretation becomes more complex, if
-\begin{itemize} [leftmargin=1cm, rightmargin=1cm, label=$\bullet$]
+\section{Introduction} \label{sec-intro}
+The interpretation of the results for linear regression models with non-constant marginal effects can be tedious. For the multiple linear regression model this is the case when the covariates are incorporated in a nonparametric way. For binary response models this is true even for very simple linear link functions. As pointed out by \citet{Hoet2007} the interpretation of  binary response models becomes yet more complex, if
+\begin{itemize} [leftmargin=1cm, rightmargin=0.5cm, label=$\bullet$]
 \item more than one categorical covariate is contained in the model,
 \item metric covariates are included nonparametrically,
 \item interaction effects between metric and categorical covariates are included.
 \end{itemize}
-For the three mentioned cases the interpretation of multiple regression models can be complex, too. Graphical displays are most often the best way to present the results of such models, especially if non-constant marginal effects are present.
+For the three mentioned cases the interpretation of the multiple linear regression model can be complex, too. Graphical displays of the effects are most often the best way to study the results of such models, especially in the presence of non-constant marginal effects.
 
-The functions \texttt{glm.interactive()} and \texttt{lm.interactive()} facilitate the interpretation of these models by providing an interactive graphical representation of the results. For each metric covariate the linear predictors, the marginal effects and, for models with binary responses, the probabilities can be displayed by means of termplots. The values of the other metric covariates can be adjusted interactively and for the specified covariate constellation tables of the effects can be printed to the console. Especially in case of the three circumstances mentioned above the functions are helpful:
-\begin{itemize} [leftmargin=1cm, rightmargin=1cm, label=$\bullet$]
+The functions \code{glm.interactive()} and \code{lm.interactive()} facilitate the interpretation of binary response and multiple linear regression models by providing an interactive graphical presentation of the results. For each metric covariate the linear predictors, the marginal effects and, for models with binary responses, the probabilities can be displayed as termplots. The values of the other metric covariates can be adjusted interactively and for the specified covariate constellation tables of the effects can be printed to the console. Especially in case of the three circumstances mentioned above the functions are helpful in the following way:
+\begin{itemize} [leftmargin=1cm, rightmargin=0.5cm, label=$\bullet$]
 \item If more than one categorical variable is contained in the model, the effects in the termplots are calculated for every combination of factor levels. Each combination is referred to as \emph{group} and can be selected to be displayed or not.
-\item For metric covariates which are incorporated nonparametrically the direct (analytical) calculation of the marginal effects is tedious. Therefore, these are calculated numerically with \texttt{splinefun()}.
+\item For metric covariates which are incorporated nonparametrically the direct (analytical) calculation of the marginal effects is tedious. Therefore, these are calculated numerically with \code{splinefun()}.
 \item The mechanics of interaction effects between metric and categorical covariates becomes obvious due to the separate treatment of the groups  and the interactive nature of the functions.
 \end{itemize}
 
+The function \code{glm.interactive()} was developed to translate suggestions for the interpretation of logit and probit models made by \citet{Hoet2007} into action, the \code{lm.interactive()} is a byproduct of this effort. The main purpose of these functions is to convey statistical concepts in educational contexts, \citet{Xie2013} gives a comprehensive overview of other recent approaches in this area. The implementation of the interactive GUI is based on the package \pkg{rpanel} \citep{BowmCrawAlex2007}. This package also contains an interactive teaching tool for spatial sampling which is described in detail in \citet{BowmGibsScot2010}. Printing \LaTeX-output to the console was inspired by the package \pkg{xtable} \citep{Dahl2012}, nevertheless an own implementation based on \code{format()} is used for technical reasons. The noninteractive visualization of the results for various types of regression models can be achieved with the package \pkg{effects} \citep{Fox2003}.
+
+The remainder of the paper is structured as follows. In section~\ref{sec-quickstart} the basic usage of the main functions \code{glm.interactive()} and \code{lm.interactive()} is described. The benefits of the implemented  visualization approach are demonstrated by means of examples  in section~\ref{sec-visualization}.  Details of the text output produced by the \textit{Snapshot}-button are addressed in section~\ref{sec-output}. While the main focus of the functions relie on the interactive usage it is nevertheless easy to reproduce the results obtained by interaction. This is explained in section~\ref{sec-usage} and especially useful for publication purposes. For the same reason the format of the text output and the layout of the plots  can be controlled to a large extent by a number of non-mandatory arguments which is  described in-depth in section~\ref{subsec-custom-text} and \ref{subsec-custom-graph}. To achieve even more flexibility the fundamental layout of the plots can be specified in advance which is shown in section~\ref{subsec-predefine}. Additional arguments control the appearance of the GUI-panel which is addressed in section~\ref{subsec-custom-gui}. Fitted-model objects which do not inherit from \code{glm()} or \code{lm()} may be used as well. The requirements for the fitted-model objects are explained in section~\ref{sec-call-classes}. In this section also a workaround for problems with the raw data extraction is described.
+
+
+
 \section{Quick start} \label{sec-quickstart}
-In terms of mandatory arguments the interfaces of the functions are kept as simple as possible. For the function \texttt{glm.interactive()} only a fitted-model object of class \texttt{glm} and for \texttt{lm.interactive()} a fitted-model object of class \texttt{lm} must be passed.
+In terms of mandatory arguments the interfaces of the functions are kept as simple as possible. For the function \code{glm.interactive()} only a fitted-model object of class \class{glm} and for \code{lm.interactive()} a fitted-model object of class \class{lm} must be passed.
 For the fitted-model objects the following prerequisites must be met:
-\begin{itemize} [leftmargin=1cm, rightmargin=1cm, label=$\bullet$]
+\begin{itemize} [leftmargin=1cm, rightmargin=0.5cm, label=$\bullet$]
 \item  The model must contain at least one metric covariate.
-\item The model must be specified with the formula interface and the data frame containing the variables must be passed with the \texttt{data} argument.
-\item The categorical variables must be \texttt{factors} (ordered or unordered).
-\item For \texttt{glm.interactive()}: the \texttt{family} of the fitted-model object must be \texttt{binomial}.
+\item The model must be specified with the formula interface and the data frame containing the variables must be passed with the \code{data} argument.
+\item The categorical variables must be \code{factors} (ordered or unordered).
+\item For \code{glm.interactive()}: the \code{family} of the fitted-model object must be \code{binomial}.
 \end{itemize}
 
-The functions may work as well for other classes of fitted-model objects. The requirements for this along with two examples are given in section~\ref{sec-call-classes}. Some formulas in the call of \texttt{glm()} or \texttt{lm()}  may cause a problem with the internal raw data extraction. A possible approach to solve this issue is also described in section~\ref{sec-call-classes}.
+The functions may work as well for other classes of fitted-model objects. The requirements for this together with two examples are given in section~\ref{sec-call-classes}. Some formulas in the call of \code{glm()} or \code{lm()}  may cause a problem with the internal raw data extraction. A possible approach to solve this issue is also described in section~\ref{sec-call-classes}.
 
-For a suitable fitted-model object the basic usage is simple. This is demonstrated by means of a probit model for defaults of consumer credits. The dataset \texttt{creditdata} used for this is contained in the package and was originally obtained from the \citet{DataCred2014}. A probit model with 3 metric covariates and 2 factors with 2 and 3 levels respectively is used as example:
-
-\begin{small} 
-\begin{verbatim}
+For a suitable fitted-model object the basic usage is simple. This is demonstrated by means of a probit model for defaults of consumer credits. The used dataset \code{creditdata}  is part of the package and was originally obtained from the \citet{DataCred2014}. A probit model with 3 metric covariates and 2 factors with 2 and 3 levels respectively is used as example:
+%
+<<eval=FALSE>>=
 data("creditdata")
-model.2.fac <- glm(credit ~ amount + I(amount^2)  + age + duration*teleph + housing, 
-    family = binomial(link="probit"), data = creditdata)
-\end{verbatim}
-\end{small}
+model.2.fac <- glm(credit ~ amount + I(amount^2)  + age + duration*teleph  
++ housing, family = binomial(link="probit"), data = creditdata)
+@
+%
 
-\noindent The variables are described in the documentation of the dataset \texttt{creditdata}.
+The variables are described in the documentation of the dataset \code{creditdata}.
 Given the fitted-model object the start is simple:
-
-\begin{small} 
-\begin{verbatim}
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac) 
-\end{verbatim}
- \end{small}
+@
+%
 
-\noindent Users of the IDE \textbf{RStudio} may need to change the graphic device with \texttt{options(device = "x11")}  before calling the function because in current versions of \textbf{RStudio} multiple graphic devices occasionally do not work properly.\footnote{The graphic device is called with \texttt{dev.new(..., noRStudioGD = TRUE)}. During the tests of the package it turned out that this option is ignored on some machines for unknown reasons.} After calling the function the basic handling is as follows:
-\begin{enumerate}[leftmargin=1cm, rightmargin=1cm, label={\arabic{enumi}.}]
-\item Select metric covariate to be displayed as termplot using the dialog (see figure \ref{fig-001}, left). Within the IDE \textbf{RStudio} the selection dialog appears as text list in the integrated console (see figure \ref{fig-001}, right). 
+Users of the IDE \textbf{RStudio} may need to change the graphic device with \code{options(device = "x11")}  before calling the function because in current versions of \textbf{RStudio} multiple graphic devices occasionally do not work properly. After calling the function the basic handling is as follows:
+\begin{enumerate}[leftmargin=1cm, rightmargin=0.5cm, label={\arabic{enumi}.}]
+\item Select metric covariate to be displayed as termplot by using the dialog (see figure \ref{fig-001}, left). Within the IDE \textbf{RStudio} the selection dialog appears as text list in the integrated console (see figure \ref{fig-001}, right). 
 
 \begin{figure}[ht]
 \centering 
-\includegraphics[height=3cm]{fig-001-1}  \includegraphics[height=3cm]{fig-001-2}
-\caption{Dialog to select metric covariate\label{fig-001}}
+\includegraphics[height=3cm, width=3.712cm]{fig-001-1}  \includegraphics[height=3cm, width=5.504cm]{fig-001-2}
+\caption{Initial dialog to select the metric covariate to be displayed.}
+\label{fig-001}
 \end{figure}
 
-\item Within the GUI-panel (see figure~\ref{fig-002-003}, left):
-\begin{itemize} [leftmargin=0.5cm, rightmargin=1cm, label=$\bullet$]
-\item Choose values of metric covariates by sliders. 
-\item Select type of termplot to be displayed in radiobox \textit{Type}.
-\item Select the level-combinations of the factors to be displayed in checkbox \textit{Groups}.
-\item Print tables to the \textsf{R Console} and optionally save the actual plot by pushing the button \textit{Snapshot}.
+\item The GUI-panel (see figure~\ref{fig-002}, left) allows the following actions:
+\begin{itemize} [leftmargin=0.5cm, rightmargin=0.5cm, label=$\bullet$]
+\item The values of the metric covariates can be choosen by sliders. 
+\item The type of the termplot to be displayed can be selected in the radiobox \textit{Type}.
+\item If factors are present, the level-combinations of the factors to be displayed can be selected in the checkbox \textit{Groups}.
+\item Tables of the effects can be printed to the \proglang{R Console} and optionally the actual plot is saved by pushing the button \textit{Snapshot}. The effects are calculated for the covariate constellation chosen by the sliders. 
 \end{itemize}
 
 \begin{figure}[ht]
 \centering
-\includegraphics[height=5cm]{fig-002}   \quad \includegraphics[height=5cm]{fig-003.pdf}
-\caption{GUI-panel and initial termplot} \label{fig-002-003}
+\includegraphics[height=5cm, width=6.26cm]{fig-002-1}   \quad \includegraphics[height=5cm, width=7.233cm]{fig-002-2.pdf}
+\caption{GUI-panel and initial termplot (linear predictor) of the selected metric covariate. By default the metric covariates are at their means and all groups are displayed.} \label{fig-002}
 \end{figure}
 \end{enumerate}
 
 Details on the tables produced by the \textit{Snapshot}-button are explained in section~\ref{sec-output}.
-On the right hand side of figure~\ref{fig-002-003} the initial termplot for the example model is shown.  The plot is optimized for screens and  needs to be shrunken here to fit on the page, therefore the annotations may be hard to read. The termplots are calculated over the span of the selected metric covariate. The first slider controls the value of the selected metric covariate which is used to calculate the output triggered by the \emph{Snapshot}-button. The initial values of the sliders are by default the means of the metric covariates. When the model contains only one metric covariate no selection dialog shows up and no legend is added to the plot. Since the number of resulting groups can become quite large no confidence intervals are implemented yet to keep the plots clear. 
-
-\newpage
-The remainder of the vignette is structured as follows: In section~\ref{sec-visualization} the benefits of the implemented  visualization approach are demonstrated by means of examples.  The details of the text output produced by the \textit{Snapshot}-button are addressed in section~\ref{sec-output}. While the main focus of the functions relies on the interactive usage it is nevertheless easy to reproduce the results obtained by interaction. This is explained in section~\ref{sec-usage} and especially useful for publication purposes. For the same reason the format of the text output and the layout of the plots  can be controlled to a large extent by a number of non-mandatory arguments which is  described in-depth in section~\ref{subsec-custom-text} and \ref{subsec-custom-graph}. To achieve even more flexibility the fundamental layout of the plots can be specified in advance which is shown in section~\ref{subsec-predefine}. Additional arguments control the appearance of the GUI-panel which is addressed in section~\ref{subsec-custom-gui}.  In section~\ref{sec-call-classes} the requirements for other fitted-model objects to work with the functions are explained and a workaround if there occurs a problem with the raw data extraction.
+On the right hand side of figure~\ref{fig-002} the initial termplot for the example model is shown.  The plot is optimized for screens and is reduced in size here to fit on the page, therefore the annotations may be hard to read. The termplots are calculated for the range of the selected metric covariate. The top slider controls the value of the selected metric covariate which is used to calculate the output triggered by the \emph{Snapshot}-button. The initial values of the sliders are by default the means of the metric covariates. When the model contains only one metric covariate no selection dialog shows up and no legend is added to the plot. Since the number of resulting groups can become quite large no confidence intervals are implemented yet to keep the plots clear. 
 
 \section{Visualization of statistical concepts} \label{sec-visualization}
-In the light of the problems pointed out in section~\ref{sec-idea} the usefulness of the functions is demonstrated by means of examples in this section. Furthermore the problem of quasi-complete separation is addressed as last example. The plots in this section are customized for printing and the code to reproduce the figures is used as demo:
+With a focus on the problems pointed out in section~\ref{sec-intro} the usefulness of the functions is demonstrated by means of examples in this section. Furthermore the problem of quasi-complete separation is addressed as last example. The plots in this section are customized for printing and the code to reproduce the figures is used as \code{demo} in the package:
+%
+<<eval=FALSE>>=
+demo(VignetteFigures, package = "LinRegInteractive", ask = FALSE)
+@
+%
+Note that 16 PDF-files are stored in the actual working directory by calling the demo.
 
-\begin{small}
-\begin{verbatim}
-demo(vigngraphs, package = "LinRegInteractive", ask = FALSE)
-\end{verbatim} 
-\end{small}
-
-\noindent Note that 16 PDF-files are stored in the actual working directory by calling the demo.
-
-\subsection{Nonlinear and nonparametric effects}
-In the example model of section~\ref{sec-quickstart} the covariate \enquote{amount} is included quadratically. 
+\subsection{Nonlinear and nonparametric effects in binary response models}
+In the example model of section~\ref{sec-quickstart} the covariate \quotes{amount} is included quadratically. 
 Selecting this covariate to be displayed the strong nonlinear effect can be observed in the linear predictors, the responses and the marginal
-effects, these  plots are shown in figure~\ref{fig-cd-amount}. For each of the 6 groups an individual line is plotted, the levels of the factor \enquote{teleph} are represented by shades of red and blue respectively and the levels of the factor \enquote{housing} by a decreasing hue of these colors.  Note that for this particular model specification the levels \enquote{freehold} and \enquote{social} of the factor \enquote{housing} could be unified. Since model specification is not an issue here this will not be discussed further.  
-
-\begin{figure}[H]
-\centering
-\includegraphics{cd-amount-link-001} \includegraphics{cd-amount-resp-001} \includegraphics{cd-amount-marg-001}
-\vspace{-0.75cm}
-\caption{Quadratic effect of a metric covariate} \label{fig-cd-amount}
-\end{figure}
-
-To allow more flexibility in the fit the amount can  be included nonparametrically by means of a spline function. 
-The modified function call is
-
-\begin{small} 
-\begin{verbatim}
-require("splines")
-model.2.fac.npamount <- glm(credit ~ bs(amount) + age + duration*teleph + housing, 
-   family = binomial(link="probit"), data = creditdata)
-glm.interactive(model.2.fac.npamount) 
-\end{verbatim}
-\end{small}
-
-\noindent 
-The resulting plots are arranged in figure~\ref{fig-cd-amount-np}. Since the legend is identical to figure~\ref{fig-cd-amount} it is omitted here.
+effects. These  plots are shown in figure~\ref{fig-cd-amount}. The other metric covariates are set to their means and for each of the 6 groups an individual line is plotted. The levels of the factor \quotes{teleph} are represented by shades of red and blue respectively and the levels of the factor \quotes{housing} by a decreasing hue of these colours.  Note that for this particular model specification the lines of the groups \quotes{teleph.yes-housing.social} and \quotes{teleph.yes-housing.freehold} and the lines of the groups \quotes{teleph.no-housing.social} and \quotes{teleph.no-housing.freehold} are almost identical. Therefore the levels \quotes{freehold} and \quotes{social} of the factor \quotes{housing} could be unified for this particular model. Since model specification is not an issue here this will not be discussed further.  
 
 \begin{figure}[ht]
 \centering
-\includegraphics{cd-amount-np-link-001} \includegraphics{cd-amount-np-resp-001} \includegraphics{cd-amount-np-marg-001}
-\caption{Nonparametric effect of a metric covariate} \label{fig-cd-amount-np}
+\includegraphics[width=5cm]{cd-amount-link-001} \includegraphics[width=5cm]{cd-amount-resp-001} \includegraphics[width=5cm]{cd-amount-marg-001}
+\vspace{-0.75cm}
+\caption{Quadratic effects of the metric covariate \quotes{amount} in the linear predictor (left), the response (middle) and the marginal effect (right) in the 6 groups formed by the two factors \quotes{teleph} and \quotes{housing}. The other metric covariates are set to their means.} \label{fig-cd-amount}
+\end{figure}
+
+To allow more flexibility in the fit the metric covariate \quotes{amount} can  be included nonparametrically using a spline function. The modified function call is
+%
+<<eval=FALSE>>=
+require("splines")
+model.2.fac.npamount <- glm(credit ~ bs(amount) + age + duration*teleph  
++ housing, family = binomial(link="probit"), data = creditdata)
+glm.interactive(model.2.fac.npamount) 
+@
+%
+ 
+The resulting plots are shown in figure~\ref{fig-cd-amount-np}. For this plot the other metric covariates are set to their means.  Since the legend is identical to figure~\ref{fig-cd-amount} it is omitted here.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=5cm]{cd-amount-np-link-001} \includegraphics[width=5cm]{cd-amount-np-resp-001} \includegraphics[width=5cm]{cd-amount-np-marg-001}
+\caption{Nonparametric effect of the metric covariate \quotes{amount} in the linear predictor (left), the response (middle) and the marginal effect (right) in the 6 groups formed by the two factors \quotes{teleph} and \quotes{housing}. The other metric covariates are set to their means.} \label{fig-cd-amount-np}
 \end{figure} 
 
-\subsection{Interaction effects}
-The mechanics of interaction effects between metric and categorical covariates can easily be observed because in the termplots  every group is represented by an individual line. In the example model from section~\ref{sec-quickstart} there is an interaction between the metric covariate \enquote{duration} and the factor \enquote{teleph}. By choosing \enquote{duration} to be displayed this interaction effect can be directly observed in the linear predictors, the responses and the marginal effects. The corresponding plots are shown in figure \ref{fig-cd-dur-1}, for the plots the other metric covariates are left at their means.  The legend is identical to figure~\ref{fig-cd-amount} and therefore omitted.
+\subsection{Interaction effects in binary response models}
+The mechanics of interaction effects between metric and categorical covariates can easily be observed because in the termplots  every group is represented by an individual line. In the example model of section~\ref{sec-quickstart} there is an interaction between the metric covariate \quotes{duration} and the factor \quotes{teleph}. By choosing \quotes{duration} to be displayed this interaction effect can be observed directly in the linear predictors, the responses and the marginal effects. The corresponding plots are shown in figure \ref{fig-cd-dur-1}, for the plots the other metric covariates are left at their means.  The legend is identical to figure~\ref{fig-cd-amount} and therefore omitted.
 \begin{figure}[ht]
 \centering
-\includegraphics{cd-dur-link-001} \includegraphics{cd-dur-resp-001} \includegraphics{cd-dur-marg-001}
-\caption{Interaction between a metric covariate and a factor - direct visualization} \label{fig-cd-dur-1}
+\includegraphics[width=5cm]{cd-dur-link-001} \includegraphics[width=5cm]{cd-dur-resp-001} \includegraphics[width=5cm]{cd-dur-marg-001}
+\caption{Direct visualization of the interaction effect between the metric covariate \quotes{duration} and the factor \quotes{teleph} in the linear predictor (left), the response (middle) and the marginal effect (right) in the 6 groups formed by the two factors \quotes{teleph} and \quotes{housing}. The other metric covariates are set to their means.} \label{fig-cd-dur-1}
 \end{figure}
 
-Due to the interactive nature of the functions the interaction effect becomes also visible when other covariates are selected to be displayed. The top row of  figure~\ref{fig-cd-age-1} shows the linear predictors, the responses and the marginal effects for the covariate \enquote{age}, the covariate  \enquote{amount} is left at the mean and the covariate \enquote{duration} is set to 12 months.  The legend is identical to figure~\ref{fig-cd-amount} and therefore omitted again. For the plots in the second row the covariate \enquote{duration} is set to 36 months. Due to the interaction effect the red lines literally move away from the blue lines compared to the plots in the first row and by this the interaction effect becomes visible indirectly.
+Due to the interactive nature of the functions the interaction effect becomes also visible when other covariates are selected to be displayed. The top row of  figure~\ref{fig-cd-age-1} shows the linear predictors, the responses and the marginal effects for the covariate \quotes{age}, the covariate  \quotes{amount} is left at the mean and the covariate \quotes{duration} is set to 12 months.  The legend is identical to figure~\ref{fig-cd-amount} and therefore omitted again. For the plots in the second row the covariate \quotes{duration} is set to 36 months. Due to the interaction effect the red lines are further away from the blue lines compared to the plots in the first row and by this the interaction effect becomes visible indirectly.
 
 \begin{figure}[H]
 \centering
-\includegraphics{cd-age-link-1-001} \includegraphics{cd-age-resp-1-001} \includegraphics{cd-age-marg-1-001}
+\includegraphics[width=5cm]{cd-age-link-1-001} \includegraphics[width=5cm]{cd-age-resp-1-001} \includegraphics[width=5cm]{cd-age-marg-1-001}
 
-\includegraphics{cd-age-link-2-001} \includegraphics{cd-age-resp-2-001} \includegraphics{cd-age-marg-2-001}
-\caption{Interaction between a metric covariate and a factor - indirect visualization} \label{fig-cd-age-1}
+\includegraphics[width=5cm]{cd-age-link-2-001} \includegraphics[width=5cm]{cd-age-resp-2-001} \includegraphics[width=5cm]{cd-age-marg-2-001}
+\caption{Indirect visualization of the interaction effect between the metric covariate \quotes{duration} and the factor \quotes{teleph} in the linear predictor (left), the response (middle) and the marginal effect (right) of the metric covariate \quotes{age} in the 6 groups formed by the two factors \quotes{teleph} and \quotes{housing}. For the figures in the first row the covariate \quotes{duration} is set to 12 months and for the second row to 36 months, the covariate \quotes{amount} is set to the mean.} \label{fig-cd-age-1}
 \end{figure}
 
-\subsection{Uncover quasi-complete separation}
-This issue is discussed in Kleiber, Zeileis (2008), p. 130ff by means of the \texttt{MurderRates}-data which originate from a study on the deterrent effect of capital punishment in the USA in 1950. The authors uncover the problem of quasi-complete separation by tracing a suspiciously large standard deviation of the coefficient estimate for the dummy variable representing the level \enquote{yes} of the factor \enquote{southern}. It is pointed out that this issue is not uncommon with small data sets but is rarely discussed in textbooks and therefore can easily be missed. Using \texttt{glm.interactive()}, choosing for instance the covariate \enquote{income} and selecting the probability termplot (see figure~\ref{fig-qcs}) directly reveals the source of the problem even for inexperienced users:
-
-\begin{small}
-\begin{verbatim}
+\subsection{Uncover quasi-complete separation in binary response models}
+This issue is discussed in Kleiber, Zeileis (2008), p. 130ff by means of the \code{MurderRates}-data which originate from a study on the deterrent effect of capital punishment in the USA in 1950. The authors uncover the problem of quasi-complete separation by tracing a suspiciously large standard deviation of the coefficient estimate for the dummy variable representing the level \quotes{yes} of the factor \quotes{southern}. It is pointed out that this issue is not uncommon with small data sets but is rarely discussed in textbooks and therefore can easily be overseen. Using \code{glm.interactive()}, choosing for instance the covariate \quotes{income} and selecting the probability termplot (see figure~\ref{fig-qcs}) directly reveals the source of the problem even for inexperienced users:
+%
+<<eval=FALSE>>=
 require("AER")
 data("MurderRates")
 model <- glm(I(executions > 0) ~ time + income + noncauc + lfp + southern, 
-    data = MurderRates, family = binomial)
+data = MurderRates, family = binomial)
 glm.interactive(model)
-\end{verbatim}
-\end{small}
+@
+%
 
 \begin{figure}[ht]
 \centering
-\includegraphics{mr-income-resp-001}
-\caption{Quasi-complete separation in the \textit{MurderRates}-data\label{fig-qcs}}
+\includegraphics[width=7.5cm]{mr-income-resp-001}
+\caption{The probability termplot of a metric covariate, here \quotes{income}, uncovers the quasi-complete separation in the \code{MurderRates}-data: Observations from the southern states are always predicted as 1.} \label{fig-qcs}
 \end{figure}
 
+
 \section{Details on the text output} \label{sec-output}
-The following tables are calculated and printed to the console by clicking the \emph{Snapshot}-button:
+The example model from section~\ref{sec-quickstart} is used for illustration in this section with the metric covariates set to their means. The following tables are calculated and printed to the console by clicking the \emph{Snapshot}-button: 
 \begin{itemize} [leftmargin=1cm, label=$\bullet$]
-\item Summary of the model obtained by \texttt{summary()} (not shown).
+\item A summary of the model obtained by \code{summary()} (not shown).
 \item Tables of the chosen values of the metric covariates and their ECDF-values (see table~\ref{tab-001}).
 
 \begin{table}[ht]
 \centering
 \begin{minipage}[c]{8cm}
-\begin{small} 
-\begin{verbatim}
+\begin{CodeChunk}
+\small
+\begin{CodeOutput}
 Actual values of metric covariates
   amount      age duration 
 3271.248   35.542   20.903 
@@ -229,19 +231,20 @@ Actual values of metric covariates
 ECDF of actual values of metric covariates
   amount      age duration 
    0.658    0.587    0.554
-\end{verbatim}
-\end{small}
+\end{CodeOutput}
+\end{CodeChunk}
 \end{minipage}
-\caption{Tables of the chosen values of the metric covariates and their ECDF-values} \label{tab-001}
+\caption{Tables of the chosen values of the metric covariates and their ECDF-values.} \label{tab-001}
 \end{table}
 
-\item For \texttt{glm.interactive()} the table of the link and response function at the chosen values of the metric covariates for each group (see table~\ref{tab-002}). For \texttt{lm.interactive()} the table of the effects at the chosen values of the metric covariates for each group.
+\item For \code{glm.interactive()} the table of the link and response function evaluated for the chosen values of the metric covariates in each group (see table~\ref{tab-002}). For \code{lm.interactive()} the table of the effects for the chosen values of the metric covariates in each group.
 
 \begin{table}[ht]
 \centering
 \begin{minipage}[c]{9cm}
-\begin{small} 
-\begin{verbatim}
+\begin{CodeChunk}
+\small
+\begin{CodeOutput}
                                   link  response
 teleph.yes-housing.social   -0.4988935 0.3089272
 teleph.yes-housing.rent     -0.8599626 0.1949048
@@ -249,20 +252,21 @@ teleph.yes-housing.freehold -0.4843101 0.3140829
 teleph.no-housing.social    -0.3219410 0.3737487
 teleph.no-housing.rent      -0.6830100 0.2473003
 teleph.no-housing.freehold  -0.3073576 0.3792856 
-\end{verbatim}
-\end{small}
+\end{CodeOutput}
+\end{CodeChunk}
 \end{minipage}
-\caption{Table of the link and response function at the chosen values of the metric covariates for each group} \label{tab-002}
+\caption{Table of the link and response function for the chosen values of the metric covariates in each group.} \label{tab-002}
 \end{table}
 
-\item Table of marginal effects for each metric covariate at the chosen values of the metric covariates 
-for each group (see table~\ref{tab-003}). The marginal effects are calculated numerically with \texttt{splinefun()}.
+\item Table of marginal effects for each metric covariate for the chosen values of the metric covariates 
+in each group (see table~\ref{tab-003}). The marginal effects are calculated numerically with \code{splinefun()}.
 
 \begin{table}[ht]
 \centering
 \begin{minipage}[c]{14cm}
-\begin{small} 
-\begin{verbatim}
+\begin{CodeChunk}
+\small
+\begin{CodeOutput}
                             marg.eff.amount marg.eff.age marg.eff.duration
 teleph.yes-housing.social     -2.092169e-05 -0.003687023       0.006380069
 teleph.yes-housing.rent       -1.637025e-05 -0.002884925       0.004992109
@@ -270,351 +274,303 @@ teleph.yes-housing.freehold   -2.107222e-05 -0.003713551       0.006425974
 teleph.no-housing.social      -2.249765e-05 -0.003964754       0.010967022
 teleph.no-housing.rent        -1.876479e-05 -0.003306914       0.009147348
 teleph.no-housing.freehold    -2.260112e-05 -0.003982988       0.011017462 
-\end{verbatim}
-\end{small}
+\end{CodeOutput}
+\end{CodeChunk}
 \end{minipage}
-\caption{Table of marginal effects for each metric covariate at the chosen values of the metric covariates for each group} \label{tab-003}
+\caption{Table of marginal effects for each metric covariate for the chosen values of the metric covariates in each group.} \label{tab-003}
 \end{table}
-
 \end{itemize}
 
-When the argument \texttt{latex2console} is set to \texttt{TRUE} in the function call the tables are printed to the console as \LaTeX-code. For the given example the tables \ref{tab-appendix-001} to \ref{tab-appendix-004} in the appendix show the results. Within a .tex-document the \LaTeX-code works with the following preamble, note that the \LaTeX-package \texttt{booktabs} is required:
-
-\vspace{0.3cm}
-\noindent 
-$\backslash$\texttt{documentclass\{scrartcl\}} \\
-$\backslash$\texttt{usepackage\{booktabs\}}\\
-$\backslash$\texttt{begin\{document\}} \\
-\texttt{\% copy and paste from R Console}\\
-$\backslash$\texttt{end\{document\}}
+When the argument \code{latex2console} is set to \code{TRUE} in the function call the tables are printed to the console as \LaTeX-code. For the given example the tables \ref{tab-appendix-001} to \ref{tab-appendix-004} in the appendix show the results. Within a .tex-document the \LaTeX-code works with the following preamble, note that the \LaTeX-package \code{booktabs} is required:
+\begin{Code}
+\documentclass{scrartcl}
+\usepackage{booktabs}
+\begin{document}
+% copy and paste from R Console
+\end{document} 
+\end{Code}
 
 \section{Details on different aspects of usage} \label{sec-usage}
-By the arguments explained in this section different aspects of usage can be controlled. The model from section~\ref{sec-quickstart} is used as example and therefore the code chunks incorporate the  \texttt{glm.interactive()}. For the \texttt{lm.interactive()} the arguments are identical.
-\paragraph{Exact control over metric covariates}
-With the sliders the values of the metric covariates cannot be selected with arbitrary precision. To allow exact control over the values these can be set as initial values for the sliders by the argument \texttt{initial.values} by means of a named list. The names in the list must exactly match the variable names:
+The arguments explained in this section control different aspects of usage. The model from section~\ref{sec-quickstart} is used as example and therefore the \code{glm.interactive()} is used throughout this section. For the \code{lm.interactive()} the arguments are identical.
 
-\begin{small}
-\begin{verbatim}
-glm.interactive(model.2.fac, initial.values = list(amount=5000, duration=24, age=30))
-\end{verbatim}
-\end{small}
-\noindent If a metric covariate is not explicitly listed the corresponding slider is initialized with the mean (the default). When the initial values  should be the medians of the metric covariates this can be achieved by:
-
-\begin{small}
-\begin{verbatim}
-glm.interactive(model.2.fac, initial.values = list(amount=median(creditdata$amount), 
-    duration=median(creditdata$duration), age=median(creditdata$age)))
-\end{verbatim}
-\end{small}
-
-\noindent Note that the ECDF-values in the text output do not exactly match $0.5$ for the metric discrete covariates. 
-
-\paragraph{Preselect metric covariate, plot type and groups}
-To avoid the selection menu to appear the name of the metric covariate to be displayed can be preselected:
-
-\begin{small}
-\begin{verbatim}
-glm.interactive(model.2.fac, preselect.var = "duration")
-\end{verbatim}
-\end{small}
-
-\noindent If no metric covariate with the name provided exists the selection menu will pop up instead.
-
-The type of plot to be displayed first can also be specified by the argument \texttt{preselect.type}. For the function \texttt{glm.interactive()} this must be one of the values \texttt{"link"} (the default), \texttt{"response"} or \texttt{"marginal"}: 
-
-\begin{small}
-\begin{verbatim}
-glm.interactive(model.2.fac, preselect.type = "response")
-\end{verbatim}
-\end{small}
-
-\noindent For the function \texttt{lm.interactive()} the values \texttt{"effect"} (the default) and \texttt{"marginal"} are valid.
-
-By default all groups are active in the initial plot. With the argument \texttt{preselect.groups} the groups which are displayed in the initial plot can be specified by means of a 
-numeric index vector. The first three groups are preselected by
-
-\begin{small}
-\begin{verbatim}
-glm.interactive(model.2.fac, preselect.groups = c(1:3))
-\end{verbatim}
-\end{small}
-
-\noindent Preselecting groups is useful if the model contains many factors. In this case the panel usually grows beyond the screen and some groups are not accessible via the GUI-panel any more. The groups are constructed with the function \texttt{factor.combinations()} which can be used to identify groups of interest. This is illustrated in example B1 in appendix~\ref{sec-app-addexample}. 
-
-The functionality to prespecify the variable, the plot type and certain groups in advance is beneficial when used in conjunction with the argument \texttt{initial.values} and the automatic save functionality. Altogether these allow the user to reproduce plots without user interaction, see the example in the last paragraph of this section.
-
-\paragraph{Save plots}
-When the plot is saved as PDF- or EPS-file there is sometimes a problem concerning the width of the legend annotations. Depending on the font family and the fontsize in some cases the legend annotations do not fit into the box around the legend in the graphics file even though these do so in the graphics window. A workaround for this is to increase the width of the legend with the argument \texttt{legend.width.factor}, which is \texttt{1} by default. If this problem occurs the width of the legend can be for instance increased about 10\% by
-
-\begin{small}
-\begin{verbatim}
-glm.interactive(model.2.fac, legend.width.factor = 1.1)
-\end{verbatim}
-\end{small}
-
-When the argument \texttt{snapshot.plot} is set to \texttt{TRUE} the current plot is saved to the working directory by \texttt{SavePlot()} when the \emph{Snapshot}-button is pressed. Note that in this case the \textsf{RGui}-window becomes the active window. The advantage to save plots this way instead of using the functionality of the \textsf{RGui} is the handling of the file name.  The file name can be specified in advance  by the argument \texttt{graphics.filename} and a hyphen followed by a sequential number with 3 digits is added to avoid that existing plots are overwritten. The path can also be specified within the filename. In addition the file format can be set by the argument \texttt{graphics.extension} which is passed to the \texttt{type}-argument in \texttt{SavePlot()} (default to \texttt{"pdf"}). To save plots of the covariate \enquote{duration} to the directory D:$\backslash$Temp by the \emph{Snapshot}-button one may use
- 
-\begin{small}
-\begin{verbatim}
-glm.interactive(model.2.fac, 
-    preselect.var     = "duration",
-    snapshot.plot     = TRUE,
-    graphics.filename = "D:/Temp/fig-credprobit-duration")
-\end{verbatim}
-\end{small}
-
-By setting the argument \texttt{autosave.plot} to \texttt{TRUE} the initial plot is saved and the GUI-control is closed immediately after initialization. In conjunction with the 
-arguments \texttt{initial.values}, \texttt{preselect.var}, \texttt{preselect.type} and \texttt{preselect.groups} this can be used to reproduce plots without user interaction. In case of the example model with 2 factors the plot of the marginal effects with a prespecified covariate constellation and a subset of the groups is saved to the actual working directory by
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Exact control over metric covariates} 
+With the sliders the values of the metric covariates cannot be selected with arbitrary precision. To allow exact control over the values these can be set as initial values for the sliders with the argument \code{initial.values} through a named list. The names in the list must exactly match the variable names:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac,
-    initial.values      = list(amount=5000, duration=24, age=30), 
-    preselect.var       = "duration",
-    preselect.type      = "marginal",
-    preselect.groups    = c(2,3,5,6),
-    autosave.plot       = TRUE,
-    graphics.filename   = "fig-credprobit-duration-marg",
-    legend.width.factor = 1.05)
-\end{verbatim}
-\end{small}
-\noindent Note that the legend width needs to be increased here for the PDF-files to look as expected. The figures of section~\ref{sec-visualization} are created in this reproducible way, the code can be found in the demo of the package.  
+initial.values = list(amount=5000, duration=24, age=30))
+@
+%
+
+If a metric covariate is not explicitly listed the corresponding slider is initialized with the mean (the default). 
+
+\vspace{-0.3cm}\paragraph{Preselect metric covariate, plot type and groups}
+To avoid the appearance of a selection menu the name of the metric covariate to be displayed can be preselected:
+%
+<<eval=FALSE>>=
+glm.interactive(model.2.fac, preselect.var = "duration")
+@
+%
+If no metric covariate with the provided name exists the selection menu will pop up instead.
+
+The type of plot to be displayed first can also be specified by the argument \code{preselect.type}. For the function \code{glm.interactive()} this must be one of the values \code{"link"} (the default), \code{"response"} or \code{"marginal"}: 
+%
+<<eval=FALSE>>=
+glm.interactive(model.2.fac, preselect.type = "response")
+@
+%
+For the function \code{lm.interactive()} the values \code{"effect"} (the default) and \code{"marginal"} are valid choices.
+
+By default all groups are active in the initial plot. With the argument \code{preselect.groups} the groups  displayed in the initial plot can be specified by means of a 
+numeric index vector. The first three groups are preselected by
+%
+<<eval=FALSE>>=
+glm.interactive(model.2.fac, preselect.groups = c(1:3))
+@
+%
+Preselecting groups is useful if the model contains many factors. In this case the panel usually grows beyond the screen and some groups are not accessible via the GUI-panel any more. The groups are constructed with the function \code{factor.combinations()} which can be used to identify groups of interest. This is illustrated in example B1 in appendix~\ref{sec-app-addexample}. 
+
+The functionality to prespecify the variable, the plot type and certain groups in advance is beneficial when used in conjunction with the argument \code{initial.values} and the automatic save functionality. All taken together, this allows the reproduction of plots without user interaction, see the last example in this section.
+
+\vspace{-0.3cm}\paragraph{Saving plots}
+When the plot is saved as PDF- or EPS-file there is sometimes a problem concerning the width of the legend annotations. Depending on the font family and the fontsize in some cases the legend annotations do not fit into the box around the legend in the graphics file even though these do so in the graphics window. A workaround for this is to increase the width of the legend with the argument \code{legend.width.factor}, which is \code{1} by default. If this problem occurs the width of the legend can be increased about 10\% for instance by
+%
+<<eval=FALSE>>=
+glm.interactive(model.2.fac, legend.width.factor = 1.1)
+@
+%
+
+
+When the argument \code{snapshot.plot} is set to \code{TRUE} the current plot is saved to the working directory by \code{SavePlot()} when the \emph{Snapshot}-button is pressed. Note that in this case the \proglang{RGui}-window becomes the active window. The advantage to save plots this way instead of using the functionality of the \proglang{RGui} is the handling of the file name.  The file name can be specified in advance  by the argument \code{graphics.filename} and a hyphen followed by a sequential number with 3 digits is added to avoid that existing plots are overwritten. The path can also be specified within the filename. In addition the file format can be set by the argument \code{graphics.extension} which is passed to the \code{type}-argument in \code{SavePlot()} (default to \code{"pdf"}). To save plots of the covariate \quotes{duration} to the directory D:$\backslash$Temp by the \emph{Snapshot}-button one may use
+%
+<<eval=FALSE>>=
+glm.interactive(model.2.fac, 
+preselect.var     = "duration",
+snapshot.plot     = TRUE,
+graphics.filename = "D:/Temp/fig-credprobit-duration")
+@
+%
+
+By setting the argument \code{autosave.plot} to \code{TRUE} the initial plot is saved and the GUI-control is closed immediately after initialization. In conjunction with the 
+arguments \code{initial.values}, \code{preselect.var}, \code{preselect.type} and \code{preselect.groups} this can be used to reproduce plots without user interaction. In case of the example model with 2 factors the plot of the marginal effects with a prespecified covariate constellation and a subset of the groups is saved to the actual working directory by
+%
+<<eval=FALSE>>=
+glm.interactive(model.2.fac,
+initial.values      = list(amount=5000, duration=24, age=30), 
+preselect.var       = "duration",
+preselect.type      = "marginal",
+preselect.groups    = c(2,3,5,6),
+autosave.plot       = TRUE,
+graphics.filename   = "fig-credprobit-duration-marg",
+legend.width.factor = 1.05)
+@
+%
+
+Note that the legend width needs to be increased here for the PDF-files to look as expected. The figures of section~\ref{sec-visualization} are created in this reproducible way, the code can be found in the \code{demo} of the package.  
 
 \section{Details on customization} \label{sec-customization}
-The appearance of the GUI-controls, the text output and the plots can be customized in many ways. The most important ones are demonstrated  for \texttt{glm.interactive()} in this section. For \texttt{lm.interactive()} most of the arguments are identical. If there are deviations this is explicitly mentioned. Two probit models are used for demonstration throughout this section. Firstly the model introduced in section~\ref{sec-quickstart}:
-
-\begin{small}
-\begin{verbatim}
+The appearance of the GUI-controls, the text output and the plots can be customized in many ways. The most important ones are demonstrated  for \code{glm.interactive()} in this section. For \code{lm.interactive()} most of the arguments are identical. If there are deviations this is explicitly mentioned. Two probit models are used for demonstration throughout this section. Firstly the model introduced in section~\ref{sec-quickstart}:
+%
+<<eval=FALSE>>=
 data("creditdata")
-model.2.fac <- glm(credit ~ amount + I(amount^2)  + age + duration*teleph + housing, 
-    family = binomial(link="probit"), data = creditdata)
-\end{verbatim}
-\end{small}
-
-\noindent Additionally the following probit model with 3 metric covariates and 3 factors with 2, 3 and 4 levels respectively is also used occasionally:
-
-\begin{small}
-\begin{verbatim}
+model.2.fac <- glm(credit ~ amount + I(amount^2)  + age + duration*teleph
++ housing, family = binomial(link="probit"), data = creditdata)
+@
+%
+Additionally the following probit model with 3 metric covariates and 3 factors with 2, 3 and 4 levels respectively is also used occasionally:
+%
+<<eval=FALSE>>=
 data("creditdata")
-model.3.fac <- glm(credit ~ amount + I(amount^2)  + age + duration*teleph + housing + job, 
-    family = binomial(link="probit"), data = creditdata)
-\end{verbatim}
-\end{small}
+model.3.fac <- glm(credit ~ amount + I(amount^2)  + age + duration*teleph 
++ housing + job, family = binomial(link="probit"), data = creditdata)
+@
+%
 
 \subsection{Customize text output} \label{subsec-custom-text}
 
-\paragraph{Separation characters in group names}
-Within the group names which are used in the legend and the text output the character separating the factor name and the corresponding factor levels can be set with the argument \texttt{level.sep} (default to \enquote{.}). The character separating factor-factor level combinations can be set with the argument \texttt{factor.sep} (default to \enquote{-}):
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Separation characters in group names}
+Within the group names which are used in the legend and the text output the character separating the factor name and the corresponding factor levels can be set with the argument \code{level.sep} (default to \quotes{.}). The character separating factor-factor level combinations can be set with the argument \code{factor.sep} (default to \quotes{-}). Another meaningful pair of separation characters is for instance
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, 
-    factor.sep = "|",
-    level.sep  = ">")
-\end{verbatim}
-\end{small}
+factor.sep = "|",
+level.sep  = ">")
+@
+%
 
-\paragraph{Decimal mark and big mark in \LaTeX-output}
+\vspace{-0.3cm}\paragraph{Decimal mark and big mark in \LaTeX-output}
 Changing the \LaTeX-output to continental European number formats can be achieved by 
-
-\begin{small}
-\begin{verbatim}
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac,
-    latex2console = TRUE,
-    decimal.mark  = ",",
-    big.mark      = ".")
-\end{verbatim}
-\end{small}
+latex2console = TRUE,
+decimal.mark  = ",",
+big.mark      = ".")
+@
+%
 
-\noindent For the \LaTeX-code printed to the console the following preamble (here prepared for German language) for a utf8-encoded .tex-file   works well:
+For the \LaTeX-code printed to the console the following preamble (here prepared for German language) for a utf8-encoded TEX-file   works well:
+\begin{Code}
+\documentclass[a4paper]{scrartcl}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenx}
+\usepackage[ngerman]{babel}
+\usepackage[babel,german=quotes]{csquotes}
+\usepackage{icomma}
+\usepackage{booktabs}
+\begin{document}
+% copy and paste from R Console}
+\end{document}
+\end{Code}
 
-\vspace{0.3cm}
-\noindent 
-$\backslash$\texttt{documentclass[a4paper]\{scrartcl\}}\\
-$\backslash$\texttt{usepackage[T1]\{fontenc\}}\\
-$\backslash$\texttt{usepackage[utf8]\{inputenx\}}\\
-$\backslash$\texttt{usepackage[ngerman]\{babel\}}\\
-$\backslash$\texttt{usepackage[babel,german=quotes]\{csquotes\}}\\
-$\backslash$\texttt{usepackage\{icomma\}}\\
-$\backslash$\texttt{usepackage\{booktabs\}}\\
-$\backslash$\texttt{begin\{document\}}\\
-\texttt{\% copy and paste from R Console}\\
-$\backslash$\texttt{end\{document\}}
+\vspace{-0.3cm}\paragraph{Scientific notation and number of digits}
+The number of digits and the behaviour when to change to scientific notation in the text output (both plain text and \LaTeX-output) can be modified by the \proglang{R} options \code{digits} and \code{scipen}, see the documentation of \code{options()} for details. Changing the options in the \proglang{R Console} directly affects the format of the numbers and can therefore be modified between two clicks on the \emph{Snapshot}-button.
 
-\paragraph{Scientific notation and number of digits}
-The number of digits and the behaviour when to switch to scientific notation in the text output (both plain text and \LaTeX-output) can be modified by the \textsf{R} options \texttt{digits} and \texttt{scipen}, see the documentation of \texttt{options()} for details. The optimal setting depends on the given model and personal preferences. Changing the options in the \textsf{R Console} directly affects the number formatting and can therefore be modified between two clicks on the \emph{Snapshot}-button.
 
 \subsection{Customize graphic device} \label{subsec-custom-graph}
-Many graphical elements can be directly controlled by arguments in the function call. The major appearance of the plots can be controlled by manipulation of \texttt{par()}-arguments. If necessary graphical elements can be added to the plots by low-level plotting commands in the \textsf{R Console}. Note that elements added this way are not captured by the autosave functionality described at the end of section~\ref{sec-usage}. The example B2 in appendix~\ref{sec-app-addexample} shows how plots can nevertheless be saved without user interaction.
+Many graphical elements can be controlled directly by arguments in the function call. The major appearance of the plots can be controlled by manipulation of \code{par()}-arguments. If necessary graphical elements can be added to the plots by low-level plotting commands in the \proglang{R Console}. Note that elements added this way are not captured by the autosave functionality described at the end of section~\ref{sec-usage}. The example B2 in appendix~\ref{sec-app-addexample} shows how to save plots without user interaction in this case.
 
-\paragraph{Plot dimension and pointsize} The dimension of the graphic device (in centimeters) and the pointsize of plotted text can be set. A more compact plot is obtained by:
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Plot dimensions and pointsize} The dimensions of the graphic device (in centimeters) and the pointsize of plotted text can be set. A more compact plot is obtained by:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, 
-    dev.height       = 11,
-    dev.width        = 11,
-    dev.width.legend = 5,
-    dev.pointsize    = 8) 
-\end{verbatim}
-\end{small}
+dev.height       = 11,
+dev.width        = 11,
+dev.width.legend = 5,
+dev.pointsize    = 8) 
+@
+%
 
-\noindent When a legend is added the overall width of the device is \texttt{dev.width} plus \texttt{dev.width.legend}. By default a legend is added when at least one factor is used as covariate. For more details on the legend refer to the paragraph \enquote{Legend} in this section.
+When a legend is added the overall width of the device is \code{dev.width} plus \code{dev.width.legend}. By default a legend is added when at least one factor is used as covariate. For more details on the legend refer to the paragraph \quotes{Legend} in this section.
 
-\paragraph{Colors, line types and line widths}
-The colors, line types and line widths for the line representing different groups in the plots and the legend can be set directly. For the model with 2 factors the following scheme makes sense:
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Colours, line types and line widths}
+The colours, line types and line widths for the line representing different groups in the plots and the legend can be set directly. For the model with 2 factors the following scheme is suitable:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, 
-    lwd = rep(c(1,2),each=3),
-    col = c(1,"blue",2))
-\end{verbatim}
-\end{small}
-
-\noindent Note that the arguments are recycled if necessary, in this case for the color. The levels of the factor \enquote{teleph} are represented by the thickness of lines and the levels of the factor \enquote{housing} by the color.
+lwd = rep(c(1,2),each=3),
+col = c(1,"blue",2))
+@
+%
+Note that the arguments are recycled if necessary, in this case for the colour. The levels of the factor \quotes{teleph} are represented by the thickness of lines and the levels of the factor \quotes{housing} by the colour.
 For the model with 3 factors one may use
-
-\begin{small}
-\begin{verbatim}
+%
+<<eval=FALSE>>=
 glm.interactive(model.3.fac,  
-    lwd = rep(c(1,2), each=12),
-    col = rep(c(1,"blue",2), each=4),  
-    lty = c(1,2,3,4),
-    dev.width.legend = 8)
-\end{verbatim}
-\end{small}
+lwd = rep(c(1,2), each=12),
+col = rep(c(1,"blue",2), each=4),  
+lty = c(1,2,3,4),
+dev.width.legend = 8)
+@
+%
+The levels of the additional factor \quotes{job} are represented by the linetype here. The visual discrimination of 4 or more factors will be conceptually hard to achieve. In this case it may be advisable to display only a subset of groups by deselecting some of these in the checkbox or by using the argument \code{preselect.groups}. 
 
-\noindent The levels of the additional factor \enquote{job} are represented by the linetype here. The visual discrimination of 4 or more factors will be conceptually hard to achieve. In this case it may be advisable to display only a subset of groups by deselecting some of these in the checkbox or by using the argument \texttt{preselect.groups}. 
-
-\paragraph{Title and axis labels}
-By default no title is added to the plot, the label for the x-axis is the name of the selected covariate and the label for the y-axis is the name of the selected plot type. This can be overridden if necessary:
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Title and axis labels}
+By default no title is added to the plot, the label for the \emph{x}-axis is the name of the selected covariate and the label for the \emph{y}-axis is the name of the selected plot type. This can be overridden if necessary, for instance with more detailed annotations:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, 
-    preselect.var  = "duration",
-    preselect.type = "response",
-    main           = "Interaction between 'duration' and factor 'teleph'",
-    xlab           = "duration (months)",
-    ylab           = "probabilities")
-\end{verbatim}
-\end{small}
+preselect.var  = "duration",
+preselect.type = "response",
+main           = "Interaction between 'duration' and factor 'teleph'",
+xlab           = "duration (months)",
+ylab           = "probability of credit default")
+@
+%
 
-
-\paragraph{Legend}
-A legend is added by default when at least one factor is used as covariate. The legend is plotted within an own region with the left and right margin of the legend region set to $0$. The legend frequently needs to be modified since the space required by the legend depends on the number of factors used as covariates, the lengths of the group names,  the physical screen resolution and the size of the \textsf{RGui}-window (if run in  MDI-mode, not relevant for users of \textbf{RStudio}). On the one hand the space itself can be modified and on the other hand the magnification of the legend.
-The first solution for the model with 3 factors is
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Legend}
+A legend is added by default when at least one categorical covariate is used. The legend is plotted within an own region with the left and right margin of the legend region set to $0$. The legend frequently needs to be modified since the space required by the legend depends on the number of factors used as covariates, the lengths of the group names,  the physical screen resolution and the size of the \proglang{RGui}-window (if run in  MDI-mode, not relevant for users of \textbf{RStudio}). On the one hand the space for the legend itself can be modified and on the other hand the scaling of the legend. The first solution for the model with 3 factors is
+%
+<<eval=FALSE>>=
 glm.interactive(model.3.fac, dev.width.legend = 8)
-\end{verbatim}
-\end{small}
-
-\noindent For the same model reducing the magnification to 70\% of the original size also works:
- 
-\begin{small}
-\begin{verbatim}
+@
+%
+For the same model reducing the scale to 70\% of the original size also works:
+%
+<<eval=FALSE>>=
 glm.interactive(model.3.fac, legend.cex = 0.7)
-\end{verbatim}
-\end{small}
-
-The position of the legend can be modified as well, refer to the documentation of \texttt{legend()} for details:
-
-\begin{small}
-\begin{verbatim}
+@
+%
+The position of the legend can be modified as well, refer to the documentation of \code{legend()} for details:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, legend.pos = "top")
-\end{verbatim}
-\end{small}
+@
+%
+With the argument \code{legend.width.factor} the width of the box around the legend can be manipulated, see the explanations in the paragraph \quotes{Save plots} in section \ref{sec-usage}.  
 
-With the argument \texttt{legend.width.factor} the width of the box surrounding the legend can be manipulated, see the explanations in the paragraph \enquote{Save plots} in section \ref{sec-usage}.  
-
-When factors are present the legend and the corresponding plot region for it can be completely suppressed with
-
-\begin{small}
-\begin{verbatim}
+When factors are present the legend and the corresponding plot region for it can be completely suppressed by
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, legend.add = FALSE)
-\end{verbatim}
-\end{small}
+@
+%
+Setting the additional argument \code{legend.space} to \code{TRUE} will create the  corresponding plot region without the legend:
+%
+<<eval=FALSE>>=
+glm.interactive(model.2.fac,
+legend.add   = FALSE,
+legend.space = TRUE)
+@
+%
 
-\noindent Setting the additional argument \texttt{legend.space} to \texttt{TRUE} will create the  corresponding plot region without the legend:
-
-\begin{small}
-\begin{verbatim}
-glm.interactive(model.2.fac, 
-    legend.add   = FALSE,
-    legend.space = TRUE)
-\end{verbatim}
-\end{small}
-
-\noindent This can be useful if different plots are arranged in a document but for only one of the plots a legend should appear. The empty spaces ensure exact alignments and matching plot dimensions in this case. Figure~\ref{fig-cd-amount} in section~\ref{sec-visualization} is an example for this, the code to reproduce the figure can be found in the demo. To achieve full flexibility for the arrangement of plots in a document the legend can be plotted alone:
-
-\begin{small}
-\begin{verbatim}
+This can be useful if different plots are arranged in a document but for only one of the plots a legend should appear. The empty spaces ensure exact alignments and matching plot dimensions in this case. Figure~\ref{fig-cd-amount} in section~\ref{sec-visualization} is an example for this, the code to reproduce the figure can be found in the demo. To achieve full flexibility for the arrangement of plots in a document the legend can be plotted alone:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, legend.only = TRUE)
-\end{verbatim}
-\end{small}
+@
+%
+Note that in this case the width of the graphic device is solely controlled by  \code{dev.width.legend} and in conjunction with \code{dev.height} the overall size of the legend can be set precisely.
 
-\noindent Note that in this case the width of the graphic device is solely controlled by  \texttt{dev.width.legend} and in conjunction with \texttt{dev.height} the overall size of the legend can be set precisely.
-
-\paragraph{Rug plot}
-By default a rug representation of the selected metric covariate is added to the southern axis of the plot. The length of the ticks can be controlled with the argument \texttt{rug.ticksize} which is \texttt{0.02} by default.  For many observations the rug considerably slows down the rebuild of the plot. Setting \texttt{rug.ticksize} to \texttt{0} or \texttt{NA} removes the rug representation:
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Rug plot}
+By default a rug representation of the selected metric covariate is added to the southern axis of the plot. The length of the ticks can be controlled with the argument \code{rug.ticksize} which is \code{0.02} by default.  For many observations the rug considerably slows down the rebuild of the plot. Setting \code{rug.ticksize} to \code{0} or \code{NA} removes the rug representation:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, rug.ticksize = NA)
-\end{verbatim}
-\end{small}
-
-\noindent The color of the rug tickmarks can be changed with the argument  \texttt{rug.col}:
-
-\begin{small}
-\begin{verbatim}
+@
+%
+The colour of the rug tickmarks can be changed with the argument  \code{rug.col}:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, rug.col = "gray50")
-\end{verbatim}
-\end{small}
+@
+%
 
-If more detailed control over the rug is needed, the rug needs to be suppressed and added  with \texttt{rug()} from the \textsf{R Console}. The example B2 in section~\ref{sec-app-addexample} shows how to add a customized rug plot with transparent colors.
+If more detailed control over the rug is needed, the rug needs to be suppressed and added  with \code{rug()} from the \proglang{R Console}. The example B2 in section~\ref{sec-app-addexample} shows how to add a customized rug plot with transparent colours.
 
-\paragraph{Vertical and horizontal lines}
-To aid visual perception some straight lines are added to the plots by default. A vertical black line shows the actual value of the selected metric covariate. To suppress the vertical line, e. g. for printing the plot, use
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Vertical and horizontal lines}
+To aid visual perception some straight lines are added to the plots by default. A vertical black line shows the actual value of the selected metric covariate. To suppress the vertical line, e.g. for printing the plot, use
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, vline.actual = FALSE)
-\end{verbatim}
-\end{small}
+@
+%
 
-\noindent For \texttt{glm.interactive()} horizontal black lines are drawn in the plot of the linear predictor at height \texttt{0}, in the plot of the response at height \texttt{0.5} and in the plot of the marginal effect at height \texttt{0}  by default. These lines can be suppressed by setting the corresponding arguments to \texttt{NA}: 
-
-\begin{small}
-\begin{verbatim}
+For \code{glm.interactive()} horizontal black lines are drawn in the plot of the linear predictor at height \code{0}, in the plot of the response at height \code{0.5} and in the plot of the marginal effect at height \code{0}  by default. These lines can be suppressed by setting the corresponding arguments to \code{NA}: 
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac,        
-    pos.hline.link     = NA,   
-    pos.hline.response = NA,   
-    pos.hline.marginal = NA)   
-\end{verbatim}
-\end{small}
-
-\noindent With the same arguments the position of the lines can be changed. For the plot of the response this makes sense if another probability threshold than $0.5$, say $0.56$, gives a better prediction accuracy:
-
-\begin{small}
-\begin{verbatim}
+pos.hline.link     = NA,   
+pos.hline.response = NA,   
+pos.hline.marginal = NA)   
+@
+%
+With the same arguments the position of the lines can be changed. For the plot of the response this is reasonable if another probability threshold than $0.5$, say $0.56$, gives a better prediction accuracy:
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, pos.hline.response = 0.56)
-\end{verbatim}
-\end{small}
+@
+%
 
-For the \texttt{lm.interactive()} the corresponding arguments are \texttt{pos.hline.effect} (default to \texttt{0}) and \linebreak\texttt{pos.hline.marginal} (default to \texttt{0}). The appearance of the lines (solid black lines) cannot be changed by arguments. To modify the lines these must be suppressed and can be added with \texttt{abline()}-commands from the \textsf{R Console}. 
+For the \code{lm.interactive()} the corresponding arguments are \code{pos.hline.effect} (default to \code{0}) and \code{pos.hline.marginal} (default to \code{0}). The appearance of the lines (solid black lines) cannot be changed by arguments. To modify the lines these must be suppressed and can be added with \code{abline()}-commands from the \proglang{R Console}. 
 
-\paragraph{Number of points used for plotting} The effects are drawn for a sequence of equally spaced points over the span of the chosen metric covariate. With the argument \texttt{n.effects} the number of points can be controlled. If the lines of the effects are not smooth this value can be increased.  
+\vspace{-0.3cm}\paragraph{Number of points used for plotting} The effects are drawn for a sequence of equally spaced points over the span of the chosen metric covariate. With the argument \code{n.effects} the number of points can be controlled. If the lines of the effects are not smooth this value can be increased.  
 
 \subsection{Predefining the graphic device} \label{subsec-predefine}
-To allow for more control over the appearance of the plots the graphic device can be specified in advance.
-Two plot regions which can be accessed with high-level plotting commands are required. The legend is plotted first and the left and right margin of the legend region are set to $0$. In the following example the legend appears on the left side, the colors are specified via \texttt{palette()} and the margins as well as the magnification of the text are changed. Note that for pointsize $10$ the width of the legend must be increased to achieve that the legend annotations fit into the box of the legend in the PDF-file.   
-
-\begin{small}
-\begin{verbatim}
+For more control over the appearance of the plots the graphic device can be specified in advance.
+Two plot regions which can be accessed with high-level plotting commands are required. The legend is plotted first and the left and right margin of the legend region are set to $0$. In the following example the legend appears on the left side, the colours are specified via \code{palette()} and the margins as well as the scale of the text are changed. Note that for pointsize $10$ the width of the legend must be increased to achieve that the legend annotations fit into the box of the legend in the PDF-file.   
+%
+<<eval=FALSE>>=
 windows(10,7, pointsize = 10)
 layoutmatrix <- matrix(c(1,2,2), 1, 3)
 layout(layoutmatrix)
@@ -622,149 +578,186 @@ palette(c("darkred","red","salmon","darkblue","blue","lightblue"))
 par(cex = 1, mar = c(5,5,2,2)+0.1)
 
 glm.interactive(model.2.fac,
-    preselect.var       = "amount",
-    preselect.type      = "response",
-    dev.defined         = TRUE,
-    legend.width.factor = 1.1,
-    snapshot.plot       = TRUE)
-\end{verbatim}
-\end{small}
+preselect.var       = "amount",
+preselect.type      = "response",
+dev.defined         = TRUE,
+legend.width.factor = 1.1,
+snapshot.plot       = TRUE)
+@
+%
 
 \subsection{Customize GUI-controls} \label{subsec-custom-gui}
 
-\paragraph{Size of the GUI-controls} The size of the entire panel is calculated automatically and primarily depends on the number of covariates and groups. The layout of the panel can be modified by a number of parameters.  This can be useful for screens with a low resolution or if the model has a lot of groups. For the latter case the parameters are changed in the following example to save space:
-
-\begin{small} \begin{verbatim}
+\vspace{-0.3cm}\paragraph{Size of the GUI-controls} The size of the entire panel is calculated automatically and primarily depends on the number of covariates and groups. The layout of the panel can be modified by a number of parameters.  This can be useful for screens with a low resolution or if the model has a lot of groups. For the latter case the parameters are changed in the following example to save space:
+%
+<<eval=FALSE>>=
 glm.interactive(model.3.fac,
-    box.type.height           = 90, 
-    box.group.character.width = 6, 
-    box.group.line.height     = 25, 
-    dist.obj.height           = 2)
-\end{verbatim}
-\end{small}
+box.type.height           = 90, 
+box.group.character.width = 6, 
+box.group.line.height     = 25, 
+dist.obj.height           = 2)
+@
+%
 
-\noindent Note that for a large number of groups not every group can be seen in the GUI-panel because the panel grows beyond the screen margin. In former versions of \textbf{rpanel} (< 1.1-3) the entries of the checkbox were squeezed together. Currently there is no way to circumvent this problem. The only solution at the moment is to choose the groups in advance using the argument \texttt{preselect.groups}, see the paragraph \enquote{Preselect metric covariate, plot type and groups} in section~\ref{sec-usage}.
+Note that for a large number of groups not every group can be seen in the GUI-panel because the panel grows beyond the screen margin. In former versions of \pkg{rpanel} (< 1.1-3) the entries of the checkbox are squeezed together. Currently there is no way to circumvent this problem. At the moment the only solution is to choose the groups in advance using the argument \code{preselect.groups}, see the paragraph \quotes{Preselect metric covariate, plot type and groups} in section~\ref{sec-usage}.
 
-\paragraph{Annotations of the GUI-controls} The annotations of the GUI-controls can be changed easily, for instance to German: 
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Annotations of the GUI-controls} The annotations of the GUI-controls can be changed easily, for instance to German: 
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac,
-    panel.title      = "Probit Modell",
-    label.button     = "Schnappschuss",
-    label.slider.act = "Dargestellte Variable: ",
-    label.box.type   = "Typ",
-    label.types      = c("Linearer Praediktor", "Wahrscheinlichkeit", "Marginaler Effekt"),
-    label.box.groups = "Gruppen")
-\end{verbatim}
-\end{small}
-For \texttt{lm.interactive()} the argument \texttt{label.types} needs to be a character vector of length 2.
+panel.title      = "Probit Modell",
+label.button     = "Schnappschuss",
+label.slider.act = "Dargestellte Variable: ",
+label.box.type   = "Typ",
+label.types      = c("Linearer Praediktor", "Wahrscheinlichkeit",
+                     "Marginaler Effekt"),
+label.box.groups = "Gruppen")
+@
+%
+
+For \code{lm.interactive()} the argument \code{label.types} is a character vector of length 2 for the two types of effect plots, the effects itself and the marginal effects.
+
+\pagebreak
 
 \section{Other fitted-model objects and problems with raw data extraction} \label{sec-call-classes}
 
-\paragraph{Other classes of fitted-model objects}
-For other classes of fitted-model objects than \texttt{glm} for the function \texttt{glm.interactive()} and \texttt{lm} for the \texttt{lm.interactive()} both functions may work as well. Technically there are two requirements for this:
-\begin{enumerate}[leftmargin=1cm, rightmargin=1cm, label={\arabic{enumi}.}]
-\item From the fitted-model object, say \texttt{model}, the raw data must be extractable with \texttt{get\_all\_} \texttt{vars(model\$terms, model\$data) } or \texttt{ get\_all\_vars(model\$terms, model\$model)}. If there is a problem with the extraction of the raw data the workaround described in the next paragraph may help.
-\item Appropriate prediction methods must exist. For \texttt{glm.interactive()} these are \texttt{predict(} \linebreak \texttt{model, newdata, type = "link")} and \texttt{predict(model, newdata, type\,=\,"response")}  and for \texttt{lm.interactive()} this is  \texttt{predict(model, newdata)}.  
+\vspace{-0.3cm}\paragraph{Other classes of fitted-model objects}
+For other classes of fitted-model objects than \class{glm} for the function \code{glm.interactive()} and \class{lm} for the \code{lm.interactive()} both functions may work as well. Technically there are two requirements for this:
+\begin{enumerate}[leftmargin=1cm, rightmargin=0.5cm, label={\arabic{enumi}.}]
+\item From the fitted-model object, say \code{model}, the raw data must be extractable with \code{get\_all\_} \code{vars(model\$terms, model\$data) } or \code{ get\_all\_vars(model\$terms,} \linebreak \code{model\$model)}. If there is a problem with the extraction of the raw data the workaround described in the next paragraph may help.
+\item Appropriate prediction methods must exist. For \code{glm.interactive()} these are \code{predict(model, newdata, type = "link")} and \code{predict(model, newdata,} \linebreak \code{type = "response")}  and for \code{lm.interactive()} this is  \code{predict(model, newdata)}.  
 \end{enumerate}
 Of course the four prerequisites stated in section~\ref{sec-quickstart} must be met, too. 
 
-For instance a fitted model object obtained by \texttt{gam()} from the package \textbf{gam} \citep{Hast2013} is compatible:
-
-\begin{small} 
-\begin{verbatim}
+For instance a fitted model object obtained by \code{gam()} from the package \pkg{gam} \citep{Hast2013} is compatible:
+%
+<<eval=FALSE>>=
 data("creditdata")
 require("gam")
 model.gam <- gam(credit ~ s(amount) + lo(age) + duration*teleph + housing, 
     family = binomial, data = creditdata)
 glm.interactive(model.gam) 
-\end{verbatim}
-\end{small}
+@
+%
 
-\noindent A fitted-model object of the function \texttt{gam()} from the package \textbf{mgcv} \citep{Wood2014} works as well:
-
-\begin{small} 
-\begin{verbatim}
+A fitted-model object of the function \code{gam()} from the package \pkg{mgcv} \citep{Wood2014} works as well:
+%
+<<eval=FALSE>>=
 data("creditdata")
 require("mgcv") 
 model.mgcv <- gam(credit ~ s(amount) + s(age) + duration*teleph + housing,  
 family = binomial, data = creditdata)
 glm.interactive(model.mgcv)
-\end{verbatim}
-\end{small}
+@
+%
+Note that for stability reasons the table of coefficients is usually omitted for other classes of fitted-model objects if the argument \code{latex2console} is set to \code{TRUE}.  
 
-Note that for stability reasons the table of coefficients is usually omitted for other classes of fitted-model objects if the argument \texttt{latex2console} is set to \texttt{TRUE}.  
-
-\paragraph{Solving problems with raw data extraction} In fitted-model objects of class \texttt{lm} there is no \texttt{data} slot. Therefore the raw data must be extractable with  
-\texttt{get\_all\_vars(model\$terms, model\$model)}. For some formulas this extraction method does not work properly, for instance if a covariate is incorporated as spline function with \texttt{bs()}.  Adding  a \texttt{data} slot to the fitted-model object afterwards solves this particular problem. This is demonstrated by means of a linear regression model for the rents of apartments in Munich, Germany. The dataset \texttt{munichrent03} is contained in the package and was originally obtained from the \citet{DataRent2014}. The variables are described in the documentation of the dataset \texttt{munichrent03}:
-
-\begin{small}
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Solving problems with raw data extraction} Fitted-model objects of class \class{lm} lack a \code{data} slot. Therefore the raw data must be extractable with  
+\code{get\_all\_vars(model\$terms, model\$model)}. For some formulas this extraction method does not work properly, for instance if a covariate is incorporated as spline function with \code{bs()}.  Adding  a \code{data} slot to the fitted-model object afterwards solves this particular problem. This is demonstrated by means of a linear regression model for the rents of apartments in Munich, Germany. The dataset \code{munichrent03} is contained in the package and was originally obtained from the \citet{DataRent2014}. The variables are described in the documentation of the dataset \code{munichrent03}:
+%
+<<eval=FALSE>>=
 data("munichrent03")
 require("splines")
-model.rent <- lm(rent ~ bs(yearc) + area*location + upkitchen, data=munichrent03)
+model.rent <- lm(rent ~ bs(yearc) + area*location + upkitchen,
+data=munichrent03)
 model.rent$data <- munichrent03
 lm.interactive(model.rent)
-\end{verbatim}
-\end{small}
+@
+%
+Adding a \code{data} slot afterwards may also be helpful if the raw data cannot be extracted for other reasons.
 
-\noindent Adding  a \texttt{data} slot afterwards may also be helpful if the raw data cannot be extracted for other reasons.
+%\bibliographystyle{jss}
+%\bibliography{LinRegInteractive}
 
-\begin{thebibliography}{}
-\bibitem[Bowman et~al., 2007]{BowmCrawAlex2007}
-Bowman, A., Crawford, E., Alexander, G., and Bowman, R. (2007).
-\newblock rpanel: Simple interactive controls for {R} functions using the tcltk
-  package.
-\newblock {\em Journal of Statistical Software}, 17(9):1--18.
+\begin{thebibliography}{10}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
 
-\bibitem[Dahl, 2012]{Dahl2012}
-Dahl, D.~B. (2012).
-\newblock {\em xtable: Export tables to LaTeX or HTML}.
-\newblock R package version 1.7-0.
+\bibitem[{Bowman \emph{et~al.}(2007)Bowman, Crawford, Alexander, and
+  Bowman}]{BowmCrawAlex2007}
+Bowman A, Crawford E, Alexander G, Bowman R (2007).
+\newblock \enquote{\pkg{rpanel}: Simple Interactive Controls for \proglang{R}
+  Functions Using the \pkg{tcltk} package.}
+\newblock \emph{Journal of Statistical Software}, \textbf{17}(9), 1--18.
 
-\bibitem[{Data Archive of the Department of Statistics, University of Munich and of the SFB 386}, 2014a]{DataCred2014}
-Data Archive of the Department of Statistics, University of Munich and of the SFB 386 (2014a). Dataset for credit defaults: 
-\newblock{\url{http://www.stat.uni-muenchen.de/service/datenarchiv/kredit/kredit.html}.}
+\bibitem[{Bowman \emph{et~al.}(2010)Bowman, Gibson, Scott, and
+  Crawford}]{BowmGibsScot2010}
+Bowman A, Gibson L, Scott M, Crawford E (2010).
+\newblock \enquote{Interactive Teaching Tools for Spatial Sampling.}
+\newblock \emph{Journal of Statistical Software}, \textbf{36}(13), 1--17.
 
-\bibitem[{Data Archive of the Department of Statistics, University of Munich and of the SFB 386}, 2014b]{DataRent2014}
-Data Archive of the Department of Statistics, University of Munich and of the SFB 386 (2014b). Dataset for rents of apartments in Munich, Germany: 
-\newblock{\url{http://www.stat.uni-muenchen.de/service/datenarchiv/miete/miete03.html}.}
+\bibitem[{Dahl(2012)}]{Dahl2012}
+Dahl DB (2012).
+\newblock \emph{\pkg{xtable}: Export tables to LaTeX or HTML}.
+\newblock \proglang{R} package version 1.7-0,
+  \urlprefix\url{http://CRAN.R-project.org/package=xtable}.
 
-\bibitem[Fox, 2003]{Fox2003}
-Fox, G. (2003). 
-\newblock Effect Displays in R for Generalised Linear Models.
-\newblock {\em Journal of Statistical Software}, 8(15), 1--27.
+\bibitem[{{Data Archive of the Department of Statistics, University of Munich
+  and of the SFB 386}(2014{\natexlab{a}})}]{DataCred2014}
+{Data Archive of the Department of Statistics, University of Munich and of the
+  SFB 386} (2014{\natexlab{a}}).
+\newblock \emph{Dataset ''Kreditscoring zur Klassifikation von
+  Kreditnehmern''}.
+\newblock
+  \urlprefix\url{http://www.stat.uni-muenchen.de/service/datenarchiv/kredit/kredit.html}.
 
-\bibitem[Hastie, 2013]{Hast2013}
-Hastie, T. (2013).
-\newblock gam: Generalized Additive Models. R package
-  version 1.09.1.
-\newblock \url{http://CRAN.R-project.org/package=gam}.
+\bibitem[{{Data Archive of the Department of Statistics, University of Munich
+  and of the SFB 386}(2014{\natexlab{b}})}]{DataRent2014}
+{Data Archive of the Department of Statistics, University of Munich and of the
+  SFB 386} (2014{\natexlab{b}}).
+\newblock \emph{Dataset ''M\"unchner Mietspiegel 2003''}.
+\newblock
+  \urlprefix\url{http://www.stat.uni-muenchen.de/service/datenarchiv/miete/miete03.html}.
 
-\bibitem[Hoetker, 2007]{Hoet2007}
-Hoetker, G. (2007).
-\newblock The use of logit and probit models in strategic management research:
-  Critical issues.
-\newblock {\em Strategic Management Journal}, 28(4), 331--343.
+\bibitem[{Fox(2003)}]{Fox2003}
+Fox J (2003).
+\newblock \enquote{Effect Displays in \proglang{R} for Generalised Linear
+  Models.}
+\newblock \emph{Journal of Statistical Software}, \textbf{8}(15), 1--27.
 
-\bibitem[Kleiber and Zeileis, 2008]{KleiZeil2008}
-Kleiber, C. and Zeileis, A. (2008).
-\newblock {\em Applied Econometrics with {R}}.
-\newblock Springer, New York.
+\bibitem[{Hastie(2013)}]{Hast2013}
+Hastie T (2013).
+\newblock \emph{\pkg{gam}: Generalized Additive Models}.
+\newblock \proglang{R}~package version~1.09.1,
+  \urlprefix\url{http://CRAN.R-project.org/package=gam}.
 
-\bibitem[Wood, 2014]{Wood2014}
-Wood, S. (2014).
-\newblock mgcv: Mixed GAM Computation Vehicle with GCV/AIC/REML smoothness
-estimation. R package version 1.7-29.
-\newblock \url{http://CRAN.R-project.org/package=mgcv}.
+\bibitem[{Hoetker(2007)}]{Hoet2007}
+Hoetker G (2007).
+\newblock \enquote{The Use of Logit and Probit Models in Strategic Management
+  Research: Critical Issues.}
+\newblock \emph{Strategic Management Journal}, \textbf{28}(4), 331--343.
+
+\bibitem[{Wood(2014)}]{Wood2014}
+Wood S (2014).
+\newblock \emph{\pkg{mgcv}: Mixed GAM Computation Vehicle with GCV/AIC/REML
+  Smoothness Estimation}.
+\newblock \proglang{R}~package version~1.7-29,
+  \urlprefix\url{http://CRAN.R-project.org/package=mgcv}.
+
+\bibitem[{Xie(2013)}]{Xie2013}
+Xie Y (2013).
+\newblock \enquote{Animation: An R Package for Creating Animations and
+  Demonstrating Statistical Methods.}
+\newblock \emph{Journal of Statistical Software}, \textbf{53}(1), 1--27.
+
 \end{thebibliography}
 
-\appendix
-\newpage
-\section{Example of \LaTeX ~ text output}
-The four tables in this section are the default output for the model given in section~\ref{sec-quickstart} with the argument \texttt{latex2console} set to \texttt{TRUE}. 
 
-\begin{table}[ht]
+\pagebreak
+
+\appendix
+\section[Example of LaTeX text output]{Example of \LaTeX ~ text output}
+The four tables together with the captions in this section are the default text output (see section~\ref{sec-output}) for the model given in section~\ref{sec-quickstart} with the argument \code{latex2console} set to \code{TRUE}. 
+
+\vspace{-0.1mm}
+\begin{table}[H]
 \centering
 \begin{tabular}{lrrrr} \toprule
  &  \multicolumn{1}{c}{Estimate} & \multicolumn{1}{c}{Std. Error} & \multicolumn{1}{c}{z value} & \multicolumn{1}{c}{Pr(>$|\mbox{z}|$)} \\ \midrule
@@ -783,7 +776,8 @@ duration:telephno & 1.084062e-02 & 7.507286e-03 & 1.44401356 & 0.1487351600 \\
 \label{tab-appendix-001}
 \end{table}
 
-\begin{table}[ht]
+\vspace{-1.7mm}
+\begin{table}[H]
 \centering
 \begin{tabular}{lccc} \toprule
 \multicolumn{1}{c}{variable}  &  \multicolumn{1}{c}{amount}  &  \multicolumn{1}{c}{age}  &  \multicolumn{1}{c}{duration} \\ \midrule 
@@ -794,7 +788,8 @@ duration:telephno & 1.084062e-02 & 7.507286e-03 & 1.44401356 & 0.1487351600 \\
 \label{tab-appendix-002}
 \end{table}
 
-\begin{table}[ht]
+\vspace{-1.7mm}
+\begin{table}[H]
 \centering
 \begin{tabular}{lcc} \toprule
 \multicolumn{1}{c}{groups} &  \multicolumn{1}{c}{link} & \multicolumn{1}{c}{response} \\ \midrule
@@ -806,10 +801,11 @@ teleph.no-housing.rent & -0.6830100 & 0.2473003 \\
 teleph.no-housing.freehold & -0.3073576 & 0.3792856 \\
  \bottomrule 
 \end{tabular}
-\caption{Linear predictor and response in different groups at given values of metric covariates}
+\caption{Linear predictor and response in different groups for given values of metric covariates}
 \label{tab-appendix-003}
 \end{table}
 
+\vspace{-1.7mm}
 \begin{table}[H]
 \centering
 \begin{tabular}{lrrr} \toprule
@@ -824,42 +820,40 @@ teleph.no-housing.rent & -1.876481e-05 & -3.306914e-03 & 9.147355e-03 \\
 teleph.no-housing.freehold & -2.260113e-05 & -3.982988e-03 & 1.101747e-02 \\ 
  \bottomrule 
 \end{tabular}
-\caption{Marginal effects in different groups at given values of metric covariates}
+\caption{Marginal effects in different groups for given values of metric covariates}
 \label{tab-appendix-004}
 \end{table}
 
 \section{Additional examples} \label{sec-app-addexample}
 
-\paragraph{Example B1} For models with many groups the GUI-panel grows beyond the screen. The only way to select or deselect the nonvisible groups is to preselect these. In this example only the groups which occur more than 10 times in the data are choosen to be displayed.
-
-\begin{small} 
-\begin{verbatim}
+\vspace{-0.3cm}\paragraph{Example B1} For models with many groups the GUI-panel grows beyond the screen. The only way to select or deselect the nonvisible groups is to preselect these. In this example only the groups which occur more than 10 times in the data are choosen to be displayed.
+%
+<<eval=FALSE>>=
 model.cd.manygroups <- glm(credit ~ amount + I(amount^2) + age 
-    + duration*teleph + housing + intuse, family=binomial, data=creditdata)
++ duration*teleph + housing + intuse, family=binomial, data=creditdata)
 
-factor.combs       <- factor.combinations(creditdata[,c("teleph","housing","intuse")])
+factor.combs       <- factor.combinations(creditdata[,c("teleph",
+"housing","intuse")])
 logic.index.groups <- factor.combs$counts > 10
 index.groups       <- seq(along=factor.combs$counts)[logic.index.groups]
 
 glm.interactive(model.cd.manygroups,
-    preselect.var    = "amount",
-    preselect.groups = index.groups)
-\end{verbatim}
-\end{small}
-
-\paragraph{Example B2} A customized rug plot with transparent color is added by means of the low-level plotting command \texttt{segments()} and the result is saved to the current working directory.
-
-\begin{small} 
-\begin{verbatim}
+preselect.var    = "amount",
+preselect.groups = index.groups)
+@
+%
+\vspace{-0.3cm}\paragraph{Example B2} A customized rug plot with transparent colour is added by means of the low-level plotting command \code{segments()} and the result is saved to the current working directory.
+%
+<<eval=FALSE>>=
 glm.interactive(model.2.fac, 
-    preselect.var  = "amount",
-    preselect.type = "response",
-    rug.ticksize   = 0)
+preselect.var  = "amount",
+preselect.type = "response",
+rug.ticksize   = 0)
 segments(creditdata$amount, par("usr")[3], creditdata$amount, 
-    par("fig")[3], col = rgb(0,0,0,0.2))
+par("fig")[3], col = rgb(0,0,0,0.2))
 savePlot("credidefault-customrug", "pdf") 
-\end{verbatim}
-\end{small}
+@
+%
 
 \section{Version history}
 
@@ -868,6 +862,7 @@ savePlot("credidefault-customrug", "pdf")
 \begin{tabular}{lll}
 \toprule
 Version & Date published & Changes                                           \\ \midrule
+0.2-2   & 08.09.2014     & vignette revised \\
 0.2-1   & 26.08.2014     & argument \texttt{preselect.groups} added          \\
         &                & argument \texttt{select.all.groups.begin removed} \\
         &                & problem with flickering plot solved         \\
@@ -875,5 +870,4 @@ Version & Date published & Changes                                           \\ 
 0.1-3   & 18.08.2014     & first published version                           \\ \bottomrule
 \end{tabular} 
 \end{table}
-
 \end{document}

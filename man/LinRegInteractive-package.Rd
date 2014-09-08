@@ -12,8 +12,8 @@ The two main functions \code{\link{lm.interactive}} and \code{\link{glm.interact
 \tabular{ll}{
 Package: \tab LinRegInteractive\cr
 Type: \tab Package\cr
-Version: \tab 0.2-1\cr
-Date: \tab 2014-08-27\cr
+Version: \tab 0.2-2\cr
+Date: \tab 2014-09-08\cr
 License: \tab GPL-2\cr
 }
 }
@@ -24,7 +24,7 @@ Martin Meermeyer \email{meermeyer@statistik.uni-wuppertal.de}
 Bowman, A., Crawford, E., Alexander, G., and Bowman, R. (2007). rpanel: Simple interactive
 controls for R functions using the tcltk package. \emph{Journal of Statistical Software}, 17(9), 1-18.
 }
-\keyword{ package }
+\keyword{package}
 \seealso{
 The noninteractive visualization of the results for various types of regression models can be achieved with the package \href{http://CRAN.R-project.org/package=effects}{\pkg{effects}}.
 }

@@ -27,8 +27,8 @@ lm.interactive(model, initial.values = as.list(NULL), preselect.var = NA,
     ...)
 }
 \arguments{
-\item{model}{Object of class \code{\link{lm}} (mandatory). Other fitted-model objects may work as well, see section 8 of the vignette and examples below.}
-\item{initial.values}{Initial values for the metric covariates in a named list, default to the means. See section 6 of the vignette and examples below.}
+\item{model}{Object of class \code{\link{lm}} (mandatory). Other fitted-model objects may work as well, see section 7 of the vignette and examples below.}
+\item{initial.values}{Initial values for the metric covariates in a named list, default to the means. See section 5 of the vignette and examples below.}
 \item{preselect.var}{Name of continous variable to be displayed as character or \code{NA} (default) for menu selection.}
 \item{preselect.type}{The type of the initial plot to be displayed. Must be one of the values \code{"effect"} (default) or \code{"marginal"}.}
 \item{preselect.groups}{Numeric vector with the index of the groups which are displayed in the initial plot. If \code{NULL} (the default) all groups are displayed.}
@@ -36,7 +36,7 @@ lm.interactive(model, initial.values = as.list(NULL), preselect.var = NA,
 \item{dev.width}{Width of plot area in graphic device in cm, default to \code{18}.}
 \item{dev.width.legend}{Width of legend area in graphic device in cm, default to \code{8}.}
 \item{dev.pointsize}{Character pointsize of graphic device, default to \code{10}.}
-\item{dev.defined}{Graphic device predefined? Default to \code{FALSE}, see section 7.3 of the vignette for usage.}
+\item{dev.defined}{Graphic device predefined? Default to \code{FALSE}, see section 6.3 of the vignette for usage.}
 \item{col}{Vector of color specifications to represent different groups. Passed to the line commands and the legend. Actual palette and consecutive sequence if \code{NA} (default).}
 \item{lty}{Vector of line type specifications to represent different groups. Passed to the line commands and the legend, default to solid lines.}
 \item{lwd}{Vector of line width specifications to represent different groups. Passed to the line commands and the legend, default to \code{1}.}
@@ -44,11 +44,11 @@ lm.interactive(model, initial.values = as.list(NULL), preselect.var = NA,
 \item{xlab}{Label for the x-axis. Name of the selected covariate, if \code{NA} (the default).}
 \item{ylab}{Label for the y-axis. Name of the selected plot type (see argument \code{label.types}), if \code{NA} (the default).}
 \item{legend.add}{Should a legend be added to the plot? Default to \code{TRUE}.}
-\item{legend.space}{Should the space for the legend be reserved? Default to the value of \code{legend.add}. Setting \code{legend.add} to \code{FALSE} and \code{legend.space} to \code{TRUE} plots white space instead of the legend. This can be useful when different plots are arranged in a document to ensure exact alignments and sizes, see section 7.2 of the vignette for details.}
-\item{legend.only}{Should just the legend be plotted? Default to \code{FALSE}. A plot with the legend alone can be useful when different plots are arranged in a document, see section 7.2 of the vignette for details.}
+\item{legend.space}{Should the space for the legend be reserved? Default to the value of \code{legend.add}. Setting \code{legend.add} to \code{FALSE} and \code{legend.space} to \code{TRUE} plots white space instead of the legend. This can be useful when different plots are arranged in a document to ensure exact alignments and sizes, see section 6.2 of the vignette for details.}
+\item{legend.only}{Should just the legend be plotted? Default to \code{FALSE}. A plot with the legend alone can be useful when different plots are arranged in a document, see section 6.2 of the vignette for details.}
 \item{legend.pos}{Position of the legend as character, see \code{\link{legend}} for details. Default to \code{"center"}.}
 \item{legend.cex}{Relative size of legend text. Can be reduced if the model contains many groups. Default to \code{1}.}
-\item{legend.width.factor}{Factor by which the width of the legend is increased. Default to \code{1}. Increasing this can solve the problem that the legend annotations do not fit in the surrounding box when the plots are saved as PDF or EPS files, see section 6 of the vignette for details.}
+\item{legend.width.factor}{Factor by which the width of the legend is increased. Default to \code{1}. Increasing this can solve the problem that the legend annotations do not fit in the surrounding box when the plots are saved as PDF or EPS files, see section 5 of the vignette for details.}
 \item{rug.ticksize}{Length of rugplot tickmarks, dafault to \code{0.02}. Set to \code{0} or \code{NA}, if no rugplot should be drawn.  For many observations the rug considerably slows down the rebuild of the plot.}
 \item{rug.col}{Color of rugplot tickmarks, default to \code{"black"}.}
 \item{vline.actual}{Add vertical line at actual position of selected metric covariate? Default to \code{TRUE}.}
@@ -56,7 +56,7 @@ lm.interactive(model, initial.values = as.list(NULL), preselect.var = NA,
 \item{pos.hline.marginal}{Position of horizontal line for marginal effects plot. \code{NA} for no line, default to \code{0}.}
 \item{n.effects}{Number of equally spaced points over the span of the selected metric covariate to calculate the effects for plotting, default to \code{100}. Increase, if lines are not smooth.}
 \item{autosave.plot}{Directly save the initial plot? Default to \code{FALSE}. If set to \code{TRUE} the GUI-panel is immediately closed after initialization.}
-\item{snapshot.plot}{Save plot via \code{\link{savePlot}} when snapshot button is pressed? Default to \code{FALSE}, see section 6 of the vignette for details.}
+\item{snapshot.plot}{Save plot via \code{\link{savePlot}} when snapshot button is pressed? Default to \code{FALSE}, see section 5 of the vignette for details.}
 \item{graphics.filename}{Filename (optionally including a path) as character for graphic file.}
 \item{graphics.extension}{Filetype argument passed to \code{\link{savePlot}}, default to \code{"pdf"}.}
 \item{latex2console}{Should the textoutput triggered by the snapshot button be printed as LaTeX-code? Default to \code{FALSE}.}
@@ -87,10 +87,10 @@ The only mandatory argument of the function is a fitted-model object of class \c
 \item{The model must be specified with the formula interface and the data frame containing the variables must be passed with the \code{data} argument.}
 \item{The categorical variables must be \code{\link{factor}}s (ordered or unordered).}
 }
-The function may work for other fitted-model objects as well, see section 8 of the vignette for details and the examples below. The basic idea of the function lies in the interactive usage. It is nevertheless
-easy to reproduce the plots for publication purposes, refer to section 6 of the vignette for this.
+The function may work for other fitted-model objects as well, see section 7 of the vignette for details and the examples below. The basic idea of the function lies in the interactive usage. It is nevertheless
+easy to reproduce the plots for publication purposes, refer to section 5 of the vignette for this.
 
-Objects of class \code{\link{lm}} lack a \code{data} component. For some formulas this can cause problems, refer to section 8 of the vignette for details and the example for a nonparametric effect below.
+Objects of class \code{\link{lm}} lack a \code{data} component. For some formulas this can cause problems, refer to section 7 of the vignette for details and the example for a nonparametric effect below.
 
 Users of the IDE \bold{RStudio} may need to change the graphic device with \code{options(device = "x11")}
 before calling the function because in current versions of RStudio multiple graphic devices occasionally do not work.}
@@ -103,7 +103,7 @@ GUI-panel to manipulate the plot will be opened. The GUI-panel has the following
 \item{A checkbox to select the factor combinations (groups) to be displayed.}
 \item{A button to print tables of output to the console, see below.}
 }
-The appearance of the panel can be controlled by a number of arguments, see section 7.4 of the vignette for details.
+The appearance of the panel can be controlled by a number of arguments, see section 6.4 of the vignette for details.
 
 When the button is clicked four tables are printed to the console:
 \enumerate{
@@ -112,8 +112,8 @@ When the button is clicked four tables are printed to the console:
 \item{Table of the effects at the chosen values of the metric covariates for each group.}
 \item{Table of marginal effects for each metric covariate at the chosen values of the metric covariates for each group.}
 }
-With the argument \code{latex2console} set to \code{TRUE} the tables are printed as LaTeX-code, see section 5 of the vignette for details. The format of the text output and the layout of the plots can be
-controlled to a large extent, see section 7.1 and 7.2 of the vignette for details and the examples below.
+With the argument \code{latex2console} set to \code{TRUE} the tables are printed as LaTeX-code, see section 4 of the vignette for details. The format of the text output and the layout of the plots can be
+controlled to a large extent, see section 6.1 and 6.2 of the vignette for details and the examples below.
 }
 \references{
 Bowman, A., Crawford, E., Alexander, G., and Bowman, R. (2007). rpanel: Simple interactive
@@ -193,7 +193,7 @@ model.rent.bs <- lm(rent ~ bs(yearc) + rooms + area*location + upkitchen,
 model.rent.bs$data <- munichrent03
 lm.interactive(model.rent.bs, preselect.var="yearc")
 # Note that the data must be attached to the fitted-model object
-# afterwards, see section 8 of the vignette for details.
+# afterwards, see section 7 of the vignette for details.
 
 ## Interaction effect (directly)
 lm.interactive(model.rent, preselect.var="area")
