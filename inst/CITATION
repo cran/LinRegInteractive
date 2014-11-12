@@ -1,12 +1,12 @@
 year <- sub("-.*", "", meta$Date)
 note <- sprintf("R package version %s", meta$Version)
 
-bibentry(bibtype = "Manual",
-         title = "{LinRegInteractive}: Interactive Interpretation of Linear Regression Models",
+bibentry(bibtype = "article",
+         title = "{LinRegInteractive}: An R Package for the Interactive Interpretation of Linear Regression Models",
          author = person("Martin", "Meermeyer"),
-         year = year,
-         note = note,
-         url = "http://CRAN.R-project.org/package=LinRegInteractive",
-         textVersion = paste0("Martin Meermeyer (", year,"). LinRegInteractive: Interactive Interpretation of Linear Regression Models. ",
-                note, ". http://CRAN.R-project.org/package=LinRegInteractive"))
-
+         journal = "Schumpeter Discussion Papers",
+         year = "2014",
+         volume = "2014-014",
+         issn = "1867-5352",
+         url = "http://elpub.bib.uni-wuppertal.de/edocs/dokumente/fbb/wirtschaftswissenschaft/sdp/sdp14/sdp14014.pdf",
+         textVersion = paste0("Martin Meermeyer (2014). LinRegInteractive: An R Package for the Interactive Interpretation of Linear Regression Models. Schumpeter Discussion Papers, 2014-014. URL http://elpub.bib.uni-wuppertal.de/edocs/dokumente/fbb/wirtschaftswissenschaft/sdp/sdp14/sdp14014.pdf"))

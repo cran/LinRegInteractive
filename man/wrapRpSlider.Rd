@@ -1,5 +1,5 @@
-\name{wrap.rp.slider}
-\alias{wrap.rp.slider}
+\name{wrapRpSlider}
+\alias{wrapRpSlider}
 \title{
 Wrapper Function for rp.slider
 }
@@ -7,7 +7,7 @@ Wrapper Function for rp.slider
 Wrapper function to provide a variable name of type \code{\link{character}} to \code{\link{rp.slider}}.
 }
 \usage{
-wrap.rp.slider(panel, variable, from, to, action, title=NA, 
+wrapRpSlider(panel, variable, from, to, action, title=NA, 
 log = FALSE, showvalue = FALSE, resolution = 0, 
 initval = NULL, pos = NULL, horizontal = TRUE)
 }

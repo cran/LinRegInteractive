@@ -1,6 +1,9 @@
-import("rpanel")
+import("rpanel", "xtable")
 export(
-  "glm.interactive",
-  "lm.interactive",
-  "factor.combinations"
+  "fxInteractive",
+  "factorCombinations"
 )
+
+S3method("fxInteractive", "lm")
+S3method("fxInteractive", "glm")
+S3method("fxInteractive", "lme")

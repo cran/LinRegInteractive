@@ -1,5 +1,5 @@
-\name{factor.combinations}
-\alias{factor.combinations}
+\name{factorCombinations}
+\alias{factorCombinations}
 \title{
 Combine Levels of Different Factors to Groups
 }
@@ -7,7 +7,7 @@ Combine Levels of Different Factors to Groups
 All levels of the factors from a \code{\link{data.frame}} provided are combined, each combination of factor levels is referred to as \emph{group}.
 }
 \usage{
-factor.combinations(X, factor.sep = "-", level.sep = ".", count=TRUE)
+factorCombinations(X, factor.sep = "|", level.sep = ".", count=TRUE)
 }
 \arguments{
   \item{X}{
@@ -19,7 +19,7 @@ A \code{\link{data.frame}} containing at least one factor.
 }
 \value{
 A list with the following components:
-\item{comb}{A data frame containing every combination of factor levels (groups) for the factors provided.}
+\item{combinations}{A data frame containing every combination of factor levels (groups) for the factors provided.}
 \item{names}{A character vector with the names of the groups.  Factor-factor level combinations are separated by \code{factor.sep} and level names from the corresponding factor names by \code{level.sep}.}
 \item{counts}{If \code{count} is \code{TRUE} a vector indicating the number of occurences of the different groups within the \code{data.frame} provided to the function. \code{NULL} if \code{count} is set to \code{FALSE}.} 
 }
@@ -30,10 +30,10 @@ Function is mainly for internal use in \pkg{LinRegInteractive} but may be useful
 \examples{
 # multiple factors
 data("CO2")
-print(factor.combinations(CO2))
+print(factorCombinations(CO2))
 
 # single factor
 data("chickwts")
-print(factor.combinations(chickwts))
+print(factorCombinations(chickwts))
 }
 

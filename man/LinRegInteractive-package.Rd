@@ -6,14 +6,14 @@
 Interactive Interpretation of Linear Regression Models
 }
 \description{
-The two main functions \code{\link{lm.interactive}} and \code{\link{glm.interactive}} are based on the package \href{http://CRAN.R-project.org/package=rpanel}{\pkg{rpanel}} and provide an interactive visualization of effects and marginal effects for linear regression models and of link functions, response functions and marginal effects for generalized linear regression models for binary dependent variables. A major feature is the handling of the effects of categorical covariates: if two or more factors are used as covariates every combination of the levels of each factor (referred to as \emph{groups}) is treated separately. The interactive approach, the automatic calculation of marginal effects and far-reaching possibilities to customize the graphical output are characteristic features as well. In the accompanying vignette the usage is described in detail. 
+The implementation is based on the package \href{http://CRAN.R-project.org/package=rpanel}{\pkg{rpanel}} and provides an interactive visualization of effects, response functions and marginal effects for different kinds of regression models. Major features are the interactive approach and the handling of the effects of categorical covariates: if two or more factors are used as covariates every combination of the levels of each factor (referred to as \emph{groups}) is treated separately. The automatic calculation of marginal effects and a number of possibilities to customize the graphical output are useful features as well. In the accompanying vignette the usage is described in detail. Please refer to the documentation of the generic function \code{\link{fxInteractive}} for available methods.
 }
 \details{
 \tabular{ll}{
 Package: \tab LinRegInteractive\cr
 Type: \tab Package\cr
-Version: \tab 0.2-2\cr
-Date: \tab 2014-09-08\cr
+Version: \tab 0.3-0\cr
+Date: \tab 2014-11-12\cr
 License: \tab GPL-2\cr
 }
 }
@@ -30,17 +30,16 @@ The noninteractive visualization of the results for various types of regression 
 }
 \examples{
 \dontrun{
+### Metric dependent variable ###
+data("munichrent03")
+model.rent <- lm(rent ~ yearc + I(yearc^2) + rooms + area*location + upkitchen,
+    data=munichrent03)
+fxInteractive(model.rent)
 
 ### Binary dependent variable ###
 data("creditdata")
 model.cd <- glm(credit ~ amount + I(amount^2) + age + duration*teleph + housing,
     family=binomial, data=creditdata)
-glm.interactive(model.cd)
-
-### Metric dependent variable ###
-data("munichrent03")
-model.rent <- lm(rent ~ yearc + I(yearc^2) + rooms + area*location + upkitchen,
-    data=munichrent03)
-lm.interactive(model.rent)
+fxInteractive(model.cd)
 }
 }
