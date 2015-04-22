@@ -102,7 +102,7 @@ Please refer to the documentation of \code{\link{fxInteractive}} or the vignette
 No object is returned, please refer to the documentation of \code{\link{fxInteractive}} or the vignette for more details.
 }
 \author{ 
-Martin Meermeyer \email{meermeyer@statistik.uni-wuppertal.de}
+Martin Meermeyer \email{m.meermeyer@gmail.com}
 }
 \examples{
 ### Model specification ###

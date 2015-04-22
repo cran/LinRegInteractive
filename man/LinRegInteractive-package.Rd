@@ -12,13 +12,13 @@ The implementation is based on the package \href{http://CRAN.R-project.org/packa
 \tabular{ll}{
 Package: \tab LinRegInteractive\cr
 Type: \tab Package\cr
-Version: \tab 0.3-0\cr
-Date: \tab 2014-11-12\cr
+Version: \tab 0.3-1\cr
+Date: \tab 2015-04-22\cr
 License: \tab GPL-2\cr
 }
 }
 \author{
-Martin Meermeyer \email{meermeyer@statistik.uni-wuppertal.de}
+Martin Meermeyer \email{m.meermeyer@gmail.com}
 }
 \references{
 Bowman, A., Crawford, E., Alexander, G., and Bowman, R. (2007). rpanel: Simple interactive

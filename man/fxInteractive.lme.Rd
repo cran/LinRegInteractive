@@ -108,7 +108,7 @@ No object is returned, please refer to the documentation of \code{\link{fxIntera
 The examples in \code{\link{fxInteractive.glm}} and \code{\link{fxInteractive.lm}} are more elaborated and show different aspects of usage and customization which are valid for this method, too.
 }
 \author{ 
-Martin Meermeyer \email{meermeyer@statistik.uni-wuppertal.de}
+Martin Meermeyer \email{m.meermeyer@gmail.com}
 }
 \examples{
 require("nlme")

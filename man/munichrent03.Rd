@@ -24,7 +24,7 @@ Sample of 2,053 appartments from the data collected for the preparation of the M
   }
 }
 \details{
-A detailed description (German only) of the factor levels can be found in the rent index brochure of the city of Munich. URL: \url{http://www.muenchen.de/rathaus/dms/Home/Stadtverwaltung/Sozialreferat/wohnungsamt/Mietspiegel/pdf_mietspiegel/mietspiegel2013/Brosch\%C3\%BCre\%20Mietspiegel\%202013.pdf}.
+A detailed description (German only) of the factor levels can be found in the rent index brochure of the city of Munich. The corresponding URL violates the CRAN-policies, therefore it must be copy-and-pasted into a browser: \samp{http://www.muenchen.de/rathaus/dms/Home/Stadtverwaltung/Sozialreferat/wohnungsamt/Mietspiegel/pdf_mietspiegel/mietspiegel2013/Brosch\%C3\%BCre\%20Mietspiegel\%202013.pdf}
 }
 \source{
 \url{http://www.stat.uni-muenchen.de/service/datenarchiv/miete/miete03.html}

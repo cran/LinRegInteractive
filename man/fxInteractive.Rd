@@ -70,7 +70,7 @@ Waltham (MA): Elsevier (Academic Press).
 
 }
 \author{ 
-Martin Meermeyer \email{meermeyer@statistik.uni-wuppertal.de}
+Martin Meermeyer \email{m.meermeyer@gmail.com}
 }
 \seealso{
 \code{\link{fxInteractive.glm}} is the corresponding method for generalized linear models fitted with \code{\link{glm}}.

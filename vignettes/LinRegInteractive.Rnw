@@ -22,7 +22,7 @@ options(prompt = " ", continue = "     ", digits = 4, show.signif.stars = FALSE)
 @
 
 %% almost as usual
-\author{Martin Meermeyer\\ Bergische Universit\"at Wuppertal}
+\author{Martin Meermeyer}
 \Plainauthor{Martin Meermeyer}
 \title{\pkg{LinRegInteractive}: An \proglang{R} Package for the Interactive Interpretation of Linear Regression Models}
 \Plaintitle{LinRegInteractive: An R Package for the Interactive Interpretation of Linear Regression Models}
@@ -36,13 +36,7 @@ Technically the package is based on the package \pkg{rpanel} and the only mandat
 
 \Address{
   Martin Meermeyer\\
-  Bergische Universit\"at Wuppertal\\
-  Schumpeter School of Business and
-  Economics\\
-  Gaussstr.~20\\
-  42119~Wuppertal, Germany\\
-  E-mail: \email{meermeyer@statistik.uni-wuppertal.de}\\
-  URL: \url{http://www.statistik.uni-wuppertal.de}\\
+  E-mail: \email{m.meermeyer@gmail.com}\\
 }
 
 \begin{document}
@@ -791,6 +785,7 @@ font.main      = 1)
 \begin{tabular}{lll}
 \toprule
 Version & Date published & Changes                                           \\ \midrule
+0.3-1   & 22.04.2015     & update of contact details \\ \midrule
 0.3-0   & 12.11.2014     & switch to the concept of generic functions \\
         &                & LaTeX output is now generated with package \pkg{xtable}\\
         &                & saving plots as PDF should now work on all platforms \\

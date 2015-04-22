@@ -108,7 +108,7 @@ issues. \emph{Strategic Management Journal}, 28(4), 331-343.
 Kleiber, C., Zeileis, A. (2008). \emph{Applied Econometrics with R}. New York: Springer.
 }
 \author{ 
-Martin Meermeyer \email{meermeyer@statistik.uni-wuppertal.de}
+Martin Meermeyer \email{m.meermeyer@gmail.com}
 }
 \examples{
 ### Model specification ###
