@@ -6,14 +6,14 @@
 Interactive Interpretation of Linear Regression Models
 }
 \description{
-The implementation is based on the package \href{http://CRAN.R-project.org/package=rpanel}{\pkg{rpanel}} and provides an interactive visualization of effects, response functions and marginal effects for different kinds of regression models. Major features are the interactive approach and the handling of the effects of categorical covariates: if two or more factors are used as covariates every combination of the levels of each factor (referred to as \emph{groups}) is treated separately. The automatic calculation of marginal effects and a number of possibilities to customize the graphical output are useful features as well. In the accompanying vignette the usage is described in detail. Please refer to the documentation of the generic function \code{\link{fxInteractive}} for available methods.
+The implementation is based on the package \href{https://CRAN.R-project.org/package=rpanel}{\pkg{rpanel}} and provides an interactive visualization of effects, response functions and marginal effects for different kinds of regression models. Major features are the interactive approach and the handling of the effects of categorical covariates: if two or more factors are used as covariates every combination of the levels of each factor (referred to as \emph{groups}) is treated separately. The automatic calculation of marginal effects and a number of possibilities to customize the graphical output are useful features as well. In the accompanying vignette the usage is described in detail. Please refer to the documentation of the generic function \code{\link{fxInteractive}} for available methods.
 }
 \details{
 \tabular{ll}{
 Package: \tab LinRegInteractive\cr
 Type: \tab Package\cr
-Version: \tab 0.3-1\cr
-Date: \tab 2015-04-22\cr
+Version: \tab 0.3-2\cr
+Date: \tab 2020-01-13\cr
 License: \tab GPL-2\cr
 }
 }
@@ -26,7 +26,7 @@ controls for R functions using the tcltk package. \emph{Journal of Statistical S
 }
 \keyword{package}
 \seealso{
-The noninteractive visualization of the results for various types of regression models can be achieved with the package \href{http://CRAN.R-project.org/package=effects}{\pkg{effects}}.
+The noninteractive visualization of the results for various types of regression models can be achieved with the package \href{https://CRAN.R-project.org/package=effects}{\pkg{effects}}.
 }
 \examples{
 \dontrun{

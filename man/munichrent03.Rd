@@ -23,16 +23,15 @@ Sample of 2,053 appartments from the data collected for the preparation of the M
 	\item{\code{wwater}}{Factor: Hot water supply available?}
   }
 }
-\details{
-A detailed description (German only) of the factor levels can be found in the rent index brochure of the city of Munich. The corresponding URL violates the CRAN-policies, therefore it must be copy-and-pasted into a browser: \samp{http://www.muenchen.de/rathaus/dms/Home/Stadtverwaltung/Sozialreferat/wohnungsamt/Mietspiegel/pdf_mietspiegel/mietspiegel2013/Brosch\%C3\%BCre\%20Mietspiegel\%202013.pdf}
-}
 \source{
-\url{http://www.stat.uni-muenchen.de/service/datenarchiv/miete/miete03.html}
+\url{https://doi.org/10.5282/ubm/data.2}
 }
 \references{
 Fahrmeir, L., Kneib, T., Lang, S., Marx, B. (2013): \emph{Regression: Models, Methods and Applications}. Berlin: Springer.
 
 Fahrmeir, L., Kuenstler, R., Pigeot, I., Tutz, G. (2004): \emph{Statistik: der Weg zur Datenanalyse}, 5th edition. Berlin: Springer.
+
+Open Data LMU (2003): \emph{Muenchner Mietspiegel 2003}. 
 }
 \examples{
 data("munichrent03")

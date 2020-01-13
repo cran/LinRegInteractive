@@ -1,9 +1,17 @@
 fxInteractive <- function(model, ...) UseMethod("fxInteractive")
 
+
+####################################################|
+## Default ####
+
 fxInteractive.default <- function(...)
 	{
 	cat("This class is not supported yet. \nPlease refer to the documentation for which classes this holds.", fill = TRUE)
 	}
+
+
+####################################################|
+## Class lm ####
 
 fxInteractive.lm <- function(model, # object of class lm is mandatory
 		
@@ -68,7 +76,7 @@ fxInteractive.lm <- function(model, # object of class lm is mandatory
 		slider.width                = 200 , # Width of each slider.    
 		slider.height               = 60  , # Height of each slider.   
 		button.height               = 30  , # Height of snapshot button.
-		box.type.height             = 70  , # Height of radiobox for type selection.
+		box.type.height             = 75  , # Height of radiobox for type selection.
 		box.group.character.width   = 7   , # The width of the boxes is basically a this value times the number of characters.
 		box.group.line.height       = 28  , # The height of the checkbox is this value times the number of groups.
 		dist.obj.width              = 20  , # Vertical distance between sliders and boxes and vertical margins. 
@@ -76,11 +84,13 @@ fxInteractive.lm <- function(model, # object of class lm is mandatory
 		
 		... ) # other graphical parameters passed to par()	
 {
-	#################################################################	
-	# Pick covariates employed, check variables for factors, assign #
-	# corresponding objects and initialize graphic window			#
-	#################################################################	
 	
+	
+  
+  ##==================================================##
+  ## + Pick covariates employed, check variables for factors, assign ====
+  ##   corresponding objects and initialize graphic window
+  
 	# pick covariates which are employed in the model
 	if(!is.null(model$data))
 		{# extract data from model$data if possible
@@ -186,10 +196,11 @@ fxInteractive.lm <- function(model, # object of class lm is mandatory
 		}
 	}
 	
-	#############################################	
-	#  Action when panel items are manipulated 	#
-	#  (except action for snapshot-button)		#	
-	#############################################
+	
+	##==================================================##
+	## + Action when panel items are manipulated  ====
+	##   (except action for snapshot-button)
+	
 	func.panel.action <- function(panel) 
 	{# Main panel function, must be defined within the namespace where panel is established
 		# read plot type from panel
@@ -435,9 +446,10 @@ fxInteractive.lm <- function(model, # object of class lm is mandatory
 		panel
 	} # end body action()
 	
-	#############################################	
-	#    Action when snapshot-button is used  	#
-	#############################################
+	
+	##==================================================##
+	## + Action when snapshot-button is used ====
+	
 	internal.snapshot <- function(panel)
 	{# function must be defined within the namespace where panel is established
 		# save plot if snapshot.plot is TRUE
@@ -639,33 +651,27 @@ fxInteractive.lm <- function(model, # object of class lm is mandatory
 		panel
 	}# end body internal.snapshot
 	
-	#############################################	
-	#  Determine panel dimensions and layout 	#
-	#############################################	
+	
+	##==================================================##
+	## + Determine panel dimensions and layout ====
 	
 	# Calculate slider positions and sizes
 	y.pos.slider.other <- 2.5*dist.obj.height + slider.height
 	
 	if(factors.present)
-	{
-		# Determine maximum length of group name
-		length.factorgroup.name <- NULL 
-		for(i in 1:num.groups)
-		{
-			length.factorgroup.name <- c(length.factorgroup.name, length(strsplit(factor.comb$names[i], split=NULL)[[1]]))
-		}
-		max.length.factorgroup.name <- max(length.factorgroup.name)
-	}else
-	{#if no groups are present set to fix value
-		max.length.factorgroup.name <- 20   
-	}
+	    {
+	    max.length.factorgroup.name <- max( nchar( factor.comb$names ) )
+	    }else
+	    {##if no groups are present set to fix value
+	    max.length.factorgroup.name <- 20   
+	    }
 	
-	# Calculate button position and size
-	button.width        <- max(box.group.character.width*max.length.factorgroup.name, box.group.character.width*18)
+	## Calculate button position and size
+	button.width        <- max( box.group.character.width*max.length.factorgroup.name, box.group.character.width*18) + 15
 	button.pos.x        <- 2*dist.obj.width + slider.width
 	button.pos.y        <- dist.obj.height
 	
-	# Calculate box positions and sizes
+	## Calculate box positions and sizes
 	boxes.width         <- button.width
 	box.pos.x           <- button.pos.x
 	box.type.pos.y      <- button.pos.y + button.height + dist.obj.height
@@ -673,19 +679,22 @@ fxInteractive.lm <- function(model, # object of class lm is mandatory
 	
 	if(factors.present)
 	{
-		box.group.height <- box.group.line.height*length(factor.comb$names)
+		box.group.height <- box.group.line.height*length(factor.comb$names) + 20
 	}else
 	{
 		box.group.height <- 0   
 	}
 	
-	# Calculate overall panel size
+	## Calculate overall panel size
 	overall.width   <- box.pos.x + dist.obj.width + boxes.width
-	overall.height  <- max((4*dist.obj.height + box.type.height + box.group.height + button.height), ((num.continuous-1)*slider.height + y.pos.slider.other + dist.obj.height))
+	overall.height  <- max(
+                      	 (4*dist.obj.height + box.type.height + box.group.height + button.height + 20),
+                      	 ((num.continuous-1)*slider.height + y.pos.slider.other + dist.obj.height + 20)
+                      	)
 	
-	#########################################################	
-	#  Define main panel and populate it with GUI controls 	#
-	#########################################################
+	##==================================================##
+	## + Define main panel and populate it with GUI controls ====
+	
 	mainpanel <- rp.control(title=panel.title, size = c(overall.width,overall.height))
 	
 	# Slider for displayed continuous variable
@@ -757,6 +766,9 @@ fxInteractive.lm <- function(model, # object of class lm is mandatory
 }
 
 
+####################################################|
+## Class glm ####
+
 fxInteractive.glm <- function(model, # object of class glm is mandatory
 		
 		## Control initial appearance ##
@@ -820,7 +832,7 @@ fxInteractive.glm <- function(model, # object of class glm is mandatory
 		slider.width                = 200 , # Width of each slider.    
 		slider.height               = 60  , # Height of each slider.   
 		button.height               = 30  , # Height of snapshot button.
-		box.type.height             = 90  , # Height of radiobox for type selection.
+		box.type.height             = 100  , # Height of radiobox for type selection.
 		box.group.character.width   = 7   , # The width of the boxes is basically a this value times the number of characters.
 		box.group.line.height       = 28  , # The height of the checkbox is this value times the number of groups.
 		dist.obj.width              = 20  , # Vertical distance between sliders and boxes and vertical margins. 
@@ -828,10 +840,9 @@ fxInteractive.glm <- function(model, # object of class glm is mandatory
 		
 		... ) # other graphical parameters passed to par()	
 {
-	#################################################################	
-	# Pick covariates employed, check variables for factors, assign #
-	# corresponding objects and initialize graphic window			#
-	#################################################################
+  ##==================================================##
+  ## + Pick covariates employed, check variables for factors, assign ====
+  ##   corresponding objects and initialize graphic window
 		
 	# pick covariates which are employed in the model
 	if(!is.null(model$data))
@@ -938,10 +949,10 @@ fxInteractive.glm <- function(model, # object of class glm is mandatory
 		}
 	}
 	
-	#############################################	
-	#  Action when panel items are manipulated 	#
-	#  (except action for snapshot-button)		#	
-	#############################################
+	##==================================================##
+	## + Action when panel items are manipulated  ====
+	##   (except action for snapshot-button)
+	
 	func.panel.action <- function(panel) 
 	{# Main panel function, must be defined within the namespace where panel is established
 		# read plot type from panel
@@ -1190,9 +1201,10 @@ fxInteractive.glm <- function(model, # object of class glm is mandatory
 		panel
 	} # end body action()
 	
-	#############################################	
-	#    Action when snapshot-button is used  	#
-	#############################################
+	
+	##==================================================##
+	## + Action when snapshot-button is used ====
+	
 	internal.snapshot <- function(panel)
 	{# function must be defined within the namespace where panel is established
 		# save plot if snapshot.plot is TRUE
@@ -1397,29 +1409,22 @@ fxInteractive.glm <- function(model, # object of class glm is mandatory
 		panel	
 	} # end body internal.snapshot
 	
-	#############################################	
-	#  Determine panel dimensions and layout 	#
-	#############################################	
+	##==================================================##
+	## + Determine panel dimensions and layout ====
 	
 	# Calculate slider positions and sizes
 	y.pos.slider.other <- 2.5*dist.obj.height + slider.height
 	
 	if(factors.present)
-	{
-		# Determine maximum length of group name
-		length.factorgroup.name <- NULL 
-		for(i in 1:num.groups)
-		{
-			length.factorgroup.name <- c(length.factorgroup.name, length(strsplit(factor.comb$names[i], split=NULL)[[1]]))
-		}
-		max.length.factorgroup.name <- max(length.factorgroup.name)
-	}else
-	{#if no groups are present set to fix value
-		max.length.factorgroup.name <- 20   
-	}
+	    {
+	    max.length.factorgroup.name <- max( nchar( factor.comb$names ) )
+	    }else
+	    {##if no groups are present set to fix value
+	    max.length.factorgroup.name <- 20   
+	    }
 	
-	# Calculate button position and size
-	button.width        <- max(box.group.character.width*max.length.factorgroup.name, box.group.character.width*18)
+	## Calculate button position and size
+	button.width        <- max(box.group.character.width*max.length.factorgroup.name, box.group.character.width*18) + 15
 	button.pos.x        <- 2*dist.obj.width + slider.width
 	button.pos.y        <- dist.obj.height
 	
@@ -1431,7 +1436,7 @@ fxInteractive.glm <- function(model, # object of class glm is mandatory
 	
 	if(factors.present)
 	{
-		box.group.height <- box.group.line.height*length(factor.comb$names) + 10
+		box.group.height <- box.group.line.height*length(factor.comb$names) + 20
 	}else
 	{
 		box.group.height <- 0   
@@ -1439,12 +1444,15 @@ fxInteractive.glm <- function(model, # object of class glm is mandatory
 	
 	# Calculate overall panel size
 	overall.width   <- box.pos.x + dist.obj.width + boxes.width
-	overall.height  <- max((4*dist.obj.height + box.type.height + box.group.height + button.height), ((num.continuous-1)*slider.height + y.pos.slider.other + dist.obj.height))
+	overall.height  <- max(
+	                       (4*dist.obj.height + box.type.height + box.group.height + button.height + 20),
+	                       ((num.continuous-1)*slider.height + y.pos.slider.other + dist.obj.height + 20)
+	                      )
 	
-	#########################################################	
-	#  Define main panel and populate it with GUI controls 	#
-	#########################################################
-	mainpanel <- rp.control(title=panel.title, size = c(overall.width,overall.height))
+	##==================================================##
+	## + Define main panel and populate it with GUI controls ====
+	
+	mainpanel <- rp.control(title=panel.title, size = c(overall.width, overall.height))
 	
 	# Slider for displayed continuous variable
 	initial.act <- initial.values[[var.selection]]
@@ -1528,7 +1536,7 @@ wrapRpSlider <- function(panel, variable, from, to, action, title=NA,
 	}
 	
 	slider.call <- paste("rp.slider(panel=", panel,", variable=",variable, ", from=",from,", to=",to,", action=", action,", title=",title.call,", pos=",deparse(pos),
-			", log =",deparse(log),", showvalue = ",deparse(showvalue),", resolution = ",resolution,", initval = ",deparse(initval),
+			", labels = \"\", log =",deparse(log),", showvalue = ",deparse(showvalue),", resolution = ",resolution,", initval = ",deparse(initval),
 			", horizontal = ",deparse(horizontal),")", sep="")
 	
 	return(parse(text=slider.call)) 
@@ -1622,6 +1630,9 @@ factorCombinations <- function(X, factor.sep="|", level.sep=".", count=TRUE)
 }
 
 
+####################################################|
+## Class lme ####
+
 fxInteractive.lme <- function(model, # object of class lm is mandatory
 		
 		predict.lme.level = 0, # Levels of grouping to be displayed, passed to predict.lme. Only one level can be visualized, default to 0. 
@@ -1687,7 +1698,7 @@ fxInteractive.lme <- function(model, # object of class lm is mandatory
 		slider.width                = 200 , # Width of each slider.    
 		slider.height               = 60  , # Height of each slider.   
 		button.height               = 30  , # Height of snapshot button.
-		box.type.height             = 70  , # Height of radiobox for type selection.
+		box.type.height             = 75  , # Height of radiobox for type selection.
 		box.group.character.width   = 7   , # The width of the boxes is basically a this value times the number of characters.
 		box.group.line.height       = 28  , # The height of the checkbox is this value times the number of groups.
 		dist.obj.width              = 20  , # Vertical distance between sliders and boxes and vertical margins. 
@@ -1695,10 +1706,9 @@ fxInteractive.lme <- function(model, # object of class lm is mandatory
 		
 		... ) # other graphical parameters passed to par()	
 {
-	#################################################################	
-	# Pick covariates employed, check variables for factors, assign #
-	# corresponding objects and initialize graphic window			#
-	#################################################################	
+  ##==================================================##
+  ## + Pick covariates employed, check variables for factors, assign ====
+  ##   corresponding objects and initialize graphic window
 	
 	# pick covariates which are employed in the model
 	if(!is.null(model$data))
@@ -1807,10 +1817,11 @@ fxInteractive.lme <- function(model, # object of class lm is mandatory
 		}
 	}
 	
-	#############################################	
-	#  Action when panel items are manipulated 	#
-	#  (except action for snapshot-button)		#	
-	#############################################
+	
+	##==================================================##
+	## + Action when panel items are manipulated  ====
+	##   (except action for snapshot-button)
+	
 	func.panel.action <- function(panel) 
 	{# Main panel function, must be defined within the namespace where panel is established
 		# read plot type from panel
@@ -2056,9 +2067,10 @@ fxInteractive.lme <- function(model, # object of class lm is mandatory
 		panel
 	} # end body action()
 	
-	#############################################	
-	#    Action when snapshot-button is used  	#
-	#############################################
+	
+	##==================================================##
+	## + Action when snapshot-button is used ====
+	
 	internal.snapshot <- function(panel)
 	{# function must be defined within the namespace where panel is established
 		# save plot if snapshot.plot is TRUE
@@ -2260,29 +2272,23 @@ fxInteractive.lme <- function(model, # object of class lm is mandatory
 		panel
 	}# end body internal.snapshot
 	
-	#############################################	
-	#  Determine panel dimensions and layout 	#
-	#############################################	
 	
-	# Calculate slider positions and sizes
+	##==================================================##
+	## + Determine panel dimensions and layout ====
+	
+	## Calculate slider positions and sizes
 	y.pos.slider.other <- 2.5*dist.obj.height + slider.height
 	
 	if(factors.present)
-	{
-		# Determine maximum length of group name
-		length.factorgroup.name <- NULL 
-		for(i in 1:num.groups)
-		{
-			length.factorgroup.name <- c(length.factorgroup.name, length(strsplit(factor.comb$names[i], split=NULL)[[1]]))
-		}
-		max.length.factorgroup.name <- max(length.factorgroup.name)
-	}else
-	{#if no groups are present set to fix value
-		max.length.factorgroup.name <- 20   
-	}
+	    {
+	    max.length.factorgroup.name <- max( nchar( factor.comb$names ) )
+	    }else
+	    {##if no groups are present set to fix value
+	    max.length.factorgroup.name <- 20   
+	    }
 	
 	# Calculate button position and size
-	button.width        <- max(box.group.character.width*max.length.factorgroup.name, box.group.character.width*18)
+	button.width        <- max(box.group.character.width*max.length.factorgroup.name, box.group.character.width*18) + 15
 	button.pos.x        <- 2*dist.obj.width + slider.width
 	button.pos.y        <- dist.obj.height
 	
@@ -2294,7 +2300,7 @@ fxInteractive.lme <- function(model, # object of class lm is mandatory
 	
 	if(factors.present)
 	{
-		box.group.height <- box.group.line.height*length(factor.comb$names)
+		box.group.height <- box.group.line.height*length(factor.comb$names) + 20
 	}else
 	{
 		box.group.height <- 0   
@@ -2302,11 +2308,14 @@ fxInteractive.lme <- function(model, # object of class lm is mandatory
 	
 	# Calculate overall panel size
 	overall.width   <- box.pos.x + dist.obj.width + boxes.width
-	overall.height  <- max((4*dist.obj.height + box.type.height + box.group.height + button.height), ((num.continuous-1)*slider.height + y.pos.slider.other + dist.obj.height))
+	overall.height  <- max(
+                      	  (4*dist.obj.height + box.type.height + box.group.height + button.height + 20),
+                      	  ((num.continuous-1)*slider.height + y.pos.slider.other + dist.obj.height + 20)
+                      	)
 	
-	#########################################################	
-	#  Define main panel and populate it with GUI controls 	#
-	#########################################################
+	##==================================================##
+	## + Define main panel and populate it with GUI controls ====
+	
 	mainpanel <- rp.control(title=panel.title, size = c(overall.width,overall.height))
 	
 	# Slider for displayed continuous variable

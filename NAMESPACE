@@ -1,4 +1,8 @@
 import("rpanel", "xtable")
+importFrom("grDevices", "dev.copy2eps", "dev.copy2pdf", "dev.flush", "dev.hold", "dev.new", "savePlot")
+importFrom("graphics", "abline", "layout", "legend", "lines", "par", "plot", "rug", "strwidth", "title")
+importFrom("stats", "complete.cases", "get_all_vars", "predict", "sd", "splinefun")
+importFrom("utils", "select.list", "tail")
 export(
   "fxInteractive",
   "factorCombinations"

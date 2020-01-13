@@ -26,12 +26,12 @@ This method facilitates the interpretation of linear mixed-effects models and is
     label.types = c("effect", "marginal effect"),
     label.box.groups = "Groups", 
     slider.width = 200, slider.height = 60, button.height = 30,
-    box.type.height = 70, box.group.character.width = 7, 
+    box.type.height = 75, box.group.character.width = 7, 
     box.group.line.height = 28, dist.obj.width = 20,
     dist.obj.height = 10, ...)
 }
 \arguments{
-\item{model}{Object of class \code{\link{lme}} (package \href{http://CRAN.R-project.org/package=nlme}{\pkg{nlme}}) (mandatory).}
+\item{model}{Object of class \code{\link{lme}} (package \href{https://CRAN.R-project.org/package=nlme}{\pkg{nlme}}) (mandatory).}
 \item{predict.lme.level}{Level of grouping to be displayed, passed to \code{\link{predict.lme}}. Only one level can be displayed, default to \code{0}.}
 \item{initial.values}{Initial values for the metric covariates in a named list, default to the means. See section 4 of the vignette and examples below.}
 \item{preselect.var}{Name of continuous variable to be displayed as character or \code{NA} (default) for menu selection.}
@@ -91,7 +91,7 @@ This method facilitates the interpretation of linear mixed-effects models and is
 \item{...}{Other graphical parameters passed to \code{\link{par}}.}
 }
 \details{
-The only mandatory argument of the function is a fitted-model object of class \code{\link{lme}} (package \href{http://CRAN.R-project.org/package=nlme}{\pkg{nlme}}). For this object the following prerequisites must be met:
+The only mandatory argument of the function is a fitted-model object of class \code{\link{lme}} (package \href{https://CRAN.R-project.org/package=nlme}{\pkg{nlme}}). For this object the following prerequisites must be met:
 \itemize{
 \item{The model must contain at least one metric covariate.}
 \item{The model must be specified with the formula interface and the data frame containing the variables must be passed with the \code{data} argument.}

@@ -26,7 +26,7 @@ This method facilitates the interpretation of multiple linear regression models 
     label.types = c("effect", "marginal effect"),
     label.box.groups = "Groups", 
     slider.width = 200, slider.height = 60, button.height = 30,
-    box.type.height = 70, box.group.character.width = 7, 
+    box.type.height = 75, box.group.character.width = 7, 
     box.group.line.height = 28, dist.obj.width = 20,
     dist.obj.height = 10, ...)
 }

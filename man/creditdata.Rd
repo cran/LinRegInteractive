@@ -33,12 +33,14 @@ Stratified sample of 1,000 credit receivers (in the following \emph{cr}) from a 
   }
 }
 \source{
-\url{http://www.stat.uni-muenchen.de/service/datenarchiv/kredit/kredit.html}
+\url{https://doi.org/10.5282/ubm/data.23}
 }
 \references{
 Fahrmeir, L., Hamerle, A., Tutz, G. (1996): \emph{Multivariate statistische Verfahren}, 2nd edition. Berlin: de Gruyter. 390 ff.
 
 Fahrmeir, L., Kneib, T., Lang, S., Marx, B. (2013): \emph{Regression: Models, Methods and Applications}. Berlin: Springer.
+
+Open Data LMU (2010): \emph{Kreditscoring zur Klassifikation von Kreditnehmern}.
 }
 \examples{
 data("creditdata")

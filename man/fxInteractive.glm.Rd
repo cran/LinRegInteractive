@@ -4,7 +4,7 @@
 Interactive Interpretation of Generalized Linear Models
 }
 \description{
-This method implements proposals for the interpretation of models for binary outcomes made by Hoetker (2007) but works for other types of generalized linear models as well. The method is also suitable for generalized additive models fitted with \code{\link{gam}} (package \href{http://CRAN.R-project.org/package=gam}{\pkg{gam}} and \href{http://CRAN.R-project.org/package=mgcv}{\pkg{mgcv}}). 
+This method implements proposals for the interpretation of models for binary outcomes made by Hoetker (2007) but works for other types of generalized linear models as well. The method is also suitable for generalized additive models fitted with \code{\link{gam}} (package \href{https://CRAN.R-project.org/package=gam}{\pkg{gam}} and \href{https://CRAN.R-project.org/package=mgcv}{\pkg{mgcv}}). 
 }
 \usage{
 \method{fxInteractive}{glm}(model, initial.values = as.list(NULL),
@@ -26,7 +26,7 @@ This method implements proposals for the interpretation of models for binary out
     label.types = c("linear predictor", "response", "marginal effect"),
     label.box.groups = "Groups", 
     slider.width = 200, slider.height = 60, button.height = 30,
-    box.type.height = 90, box.group.character.width = 7, 
+    box.type.height = 100, box.group.character.width = 7, 
     box.group.line.height = 28, dist.obj.width = 20,
     dist.obj.height = 10, ...)
 }
