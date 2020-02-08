@@ -12,8 +12,8 @@ The implementation is based on the package \href{https://CRAN.R-project.org/pack
 \tabular{ll}{
 Package: \tab LinRegInteractive\cr
 Type: \tab Package\cr
-Version: \tab 0.3-2\cr
-Date: \tab 2020-01-13\cr
+Version: \tab 0.3-3\cr
+Date: \tab 2020-02-08\cr
 License: \tab GPL-2\cr
 }
 }
