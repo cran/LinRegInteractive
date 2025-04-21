@@ -17,15 +17,15 @@ fxInteractive(model, ...)
 The only mandatory argument of the function is an appropriate fitted-model object.
 In this package version methods for the following regression models are available:
 \itemize{
-\item{Generalized linear models fitted with \code{\link{glm}}. The \code{glm}-method also works for generalized additive models fitted with \code{\link{gam}} (package \href{https://CRAN.R-project.org/package=gam}{\pkg{gam}} and \href{https://CRAN.R-project.org/package=mgcv}{\pkg{mgcv}}).}
-\item{Multiple linear regression models fitted with \code{\link{lm}}.}
-\item{Linear mixed-effects models fitted with \code{\link{lme}} (package \href{https://CRAN.R-project.org/package=nlme}{\pkg{nlme}}).}
+\item{Generalized linear models fitted with \code{\link[stats]{glm}}. The \code{glm}-method also works for generalized additive models fitted with \code{\link[gam]{gam}} (package \href{https://CRAN.R-project.org/package=gam}{\pkg{gam}} and \href{https://CRAN.R-project.org/package=mgcv}{\pkg{mgcv}}).}
+\item{Multiple linear regression models fitted with \code{\link[stats]{lm}}.}
+\item{Linear mixed-effects models fitted with \code{\link[nlme]{lme}} (package \href{https://CRAN.R-project.org/package=nlme}{\pkg{nlme}}).}
 }
 For the fitted-model objects the following prerequisites must be met:
 \itemize{
 \item{The model must contain at least one metric covariate.}
 \item{The model must be specified with the formula interface and the data frame containing the variables must be passed with the \code{data} argument.}
-\item{The categorical variables must be \code{\link{factor}}s (ordered or unordered).}
+\item{The categorical variables must be \code{\link[base]{factor}}s (ordered or unordered).}
 }
 
 The basic idea of the function is the interactive usage. It is nevertheless
@@ -45,7 +45,7 @@ The appearance of the panel can be controlled by a number of arguments, see sect
 
 When the button is clicked four tables are printed to the console:
 \enumerate{
-\item{Table of coefficients obtained by the \code{\link{summary}}-method.}
+\item{Table of coefficients obtained by the \code{\link[base]{summary}}-method.}
 \item{Table of the chosen values of the metric covariates and their ECDF-values in the dataset.}
 \item{Table of the link and response function at the chosen values of the metric covariates for each group.}
 \item{Table of marginal effects for each metric covariate at the chosen values of the metric covariates for each group.}
@@ -73,11 +73,11 @@ Waltham (MA): Elsevier (Academic Press).
 Martin Meermeyer \email{m.meermeyer@gmail.com}
 }
 \seealso{
-\code{\link{fxInteractive.glm}} is the corresponding method for generalized linear models fitted with \code{\link{glm}}.
+\code{\link[LinRegInteractive]{fxInteractive.glm}} is the corresponding method for generalized linear models fitted with \code{\link[stats]{glm}}.
 
-\code{\link{fxInteractive.lm}} is the corresponding method for multiple linear regression models fitted with \code{\link{lm}}.
+\code{\link[LinRegInteractive]{fxInteractive.lm}} is the corresponding method for multiple linear regression models fitted with \code{\link[stats]{lm}}.
 
-\code{\link{fxInteractive.lme}} is the corresponding method for linear mixed-effects models fitted with \code{\link{lme}} (package \href{https://CRAN.R-project.org/package=nlme}{\pkg{nlme}}).
+\code{\link[LinRegInteractive]{fxInteractive.lme}} is the corresponding method for linear mixed-effects models fitted with \code{\link[nlme]{lme}} (package \href{https://CRAN.R-project.org/package=nlme}{\pkg{nlme}}).
 
 The noninteractive visualization of the results for various types of regression models can be achieved with the package \href{https://CRAN.R-project.org/package=effects}{\pkg{effects}}.
 }

@@ -6,14 +6,14 @@
 Interactive Interpretation of Linear Regression Models
 }
 \description{
-The implementation is based on the package \href{https://CRAN.R-project.org/package=rpanel}{\pkg{rpanel}} and provides an interactive visualization of effects, response functions and marginal effects for different kinds of regression models. Major features are the interactive approach and the handling of the effects of categorical covariates: if two or more factors are used as covariates every combination of the levels of each factor (referred to as \emph{groups}) is treated separately. The automatic calculation of marginal effects and a number of possibilities to customize the graphical output are useful features as well. In the accompanying vignette the usage is described in detail. Please refer to the documentation of the generic function \code{\link{fxInteractive}} for available methods.
+The implementation is based on the package \href{https://CRAN.R-project.org/package=rpanel}{\pkg{rpanel}} and provides an interactive visualization of effects, response functions and marginal effects for different kinds of regression models. Major features are the interactive approach and the handling of the effects of categorical covariates: if two or more factors are used as covariates every combination of the levels of each factor (referred to as \emph{groups}) is treated separately. The automatic calculation of marginal effects and a number of possibilities to customize the graphical output are useful features as well. In the accompanying vignette the usage is described in detail. Please refer to the documentation of the generic function \code{\link[LinRegInteractive]{fxInteractive}} for available methods.
 }
 \details{
 \tabular{ll}{
 Package: \tab LinRegInteractive\cr
 Type: \tab Package\cr
-Version: \tab 0.3-3\cr
-Date: \tab 2020-02-08\cr
+Version: \tab 0.3-4\cr
+Date: \tab 2025-04-20\cr
 License: \tab GPL-2\cr
 }
 }

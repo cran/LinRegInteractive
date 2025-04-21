@@ -4,7 +4,7 @@
 Interactive Interpretation of Generalized Linear Models
 }
 \description{
-This method implements proposals for the interpretation of models for binary outcomes made by Hoetker (2007) but works for other types of generalized linear models as well. The method is also suitable for generalized additive models fitted with \code{\link{gam}} (package \href{https://CRAN.R-project.org/package=gam}{\pkg{gam}} and \href{https://CRAN.R-project.org/package=mgcv}{\pkg{mgcv}}). 
+This method implements proposals for the interpretation of models for binary outcomes made by Hoetker (2007) but works for other types of generalized linear models as well. The method is also suitable for generalized additive models fitted with \code{\link[gam]{gam}} (package \href{https://CRAN.R-project.org/package=gam}{\pkg{gam}} and \href{https://CRAN.R-project.org/package=mgcv}{\pkg{mgcv}}). 
 }
 \usage{
 \method{fxInteractive}{glm}(model, initial.values = as.list(NULL),
@@ -31,7 +31,7 @@ This method implements proposals for the interpretation of models for binary out
     dist.obj.height = 10, ...)
 }
 \arguments{
-\item{model}{Object of class \code{\link{glm}} (mandatory).}
+\item{model}{Object of class \code{\link[stats]{glm}} (mandatory).}
 \item{initial.values}{Initial values for the metric covariates in a named list, default to the means. See section 4 of the vignette and examples below.}
 \item{preselect.var}{Name of continuous variable to be displayed as character or \code{NA} (default) for menu selection.}
 \item{preselect.type}{The type of the initial plot to be displayed. Must be one of the values \code{"link"} (default), \code{"response"} or \code{"marginal"}.}
@@ -52,7 +52,7 @@ This method implements proposals for the interpretation of models for binary out
 \item{legend.add}{Should a legend be added to the plot? Default to \code{TRUE}.}
 \item{legend.space}{Should the space for the legend be reserved? Default to the value of \code{legend.add}. Setting \code{legend.add} to \code{FALSE} and \code{legend.space} to \code{TRUE} plots white space instead of the legend. This can be useful when different plots are arranged in a document to ensure exact alignments and sizes, see section 6.2 of the vignette for details.}
 \item{legend.only}{Should just the legend be plotted? Default to \code{FALSE}. A plot with the legend alone can be useful when different plots are arranged in a document, see section 6.2 of the vignette for details.}
-\item{legend.pos}{Position of the legend as character, see \code{\link{legend}} for details. Default to \code{"center"}.}
+\item{legend.pos}{Position of the legend as character, see \code{\link[graphics]{legend}} for details. Default to \code{"center"}.}
 \item{legend.cex}{Relative size of legend text. Can be reduced if the model contains many groups. Default to \code{1}.}
 \item{legend.width.factor}{Factor by which the width of the legend is increased. Default to \code{1}. Increasing this can solve the problem that the legend annotations do not fit in the surrounding box when the plots are saved as PDF or EPS files, see section 5 of the vignette for details.}
 \item{rug.ticksize}{Length of rugplot tickmarks, dafault to \code{0.02}. Set to \code{0} or \code{NA}, if no rugplot should be drawn. For many observations the rug considerably slows down the rebuild of the plot.}
@@ -64,15 +64,15 @@ This method implements proposals for the interpretation of models for binary out
 \item{snapshot.plot}{Save plot when snapshot button is pressed? Default to \code{FALSE}, see section 5 of the vignette for details.}
 \item{graphics.filename}{Filename (optionally including a path) as character for graphic file.}
 \item{graphics.numbering}{If \code{TRUE} (the default) a 3 digits number is automatically appended to the filenname to avoid that existing graphic files are overwritten.}
-\item{graphics.type}{Graphics file type argument, default to \code{"pdf"}. On Windows systems all file types accepted by \code{\link{savePlot}} work. Under non Windows systems allowed values are \code{"pdf"}, \code{"eps"}, \code{"png"}, \code{"jpeg"}, \code{"jpg"}, \code{"tiff"} and \code{"bmp"}. }
+\item{graphics.type}{Graphics file type argument, default to \code{"pdf"}. On Windows systems all file types accepted by \code{\link[grDevices]{savePlot}} work. Under non Windows systems allowed values are \code{"pdf"}, \code{"eps"}, \code{"png"}, \code{"jpeg"}, \code{"jpg"}, \code{"tiff"} and \code{"bmp"}. }
 \item{factor.sep}{Character separating the factor-factor level combinations in the group names (default to \code{"|"}).}
 \item{level.sep}{Character separating the factor name and the corresponding factor levels in the group names (default to \code{"."}).}
 \item{latex2console}{Should the textoutput triggered by the snapshot button be printed as LaTeX-code? Default to \code{FALSE}.}
-\item{xtable.big.mark}{Bigmark character for LaTeX output passed to \code{\link{print.xtable}}, default to \code{","}.}
-\item{xtable.decimal.mark}{Decimal character for LaTeX output passed to \code{\link{print.xtable}}, default to \code{"."}.}
-\item{xtable.digits}{Number of digits for LaTeX output passed to \code{\link{xtable}}, default to \code{NULL}.}
-\item{xtable.display}{Display style for LaTeX output passed to \code{\link{xtable}}, default to \code{NULL}.}
-\item{xtable.booktabs}{Use the LaTeX package \code{booktabs} for horizontal lines in LaTeX tables, default to \code{FALSE}. Passed to \code{\link{print.xtable}}.}
+\item{xtable.big.mark}{Bigmark character for LaTeX output passed to \code{\link[xtable]{print.xtable}}, default to \code{","}.}
+\item{xtable.decimal.mark}{Decimal character for LaTeX output passed to \code{\link[xtable]{print.xtable}}, default to \code{"."}.}
+\item{xtable.digits}{Number of digits for LaTeX output passed to \code{\link[xtable]{xtable}}, default to \code{NULL}.}
+\item{xtable.display}{Display style for LaTeX output passed to \code{\link[xtable]{xtable}}, default to \code{NULL}.}
+\item{xtable.booktabs}{Use the LaTeX package \code{booktabs} for horizontal lines in LaTeX tables, default to \code{FALSE}. Passed to \code{\link[xtable]{print.xtable}}.}
 \item{panel.title}{Title used in the title bar of the GUI-panel of type \code{character}.}
 \item{label.button}{Label for the snapshot-button of type \code{character}.}
 \item{label.slider.act}{Additional label for the slider of the selected metric covariate of type \code{character}.}
@@ -87,19 +87,19 @@ This method implements proposals for the interpretation of models for binary out
 \item{box.group.line.height}{The height of the checkbox is this value times the number of groups in points (default to \code{28}).}
 \item{dist.obj.width}{Vertical distance between sliders and boxes and vertical margins in points (default to \code{20}).}
 \item{dist.obj.height}{Horizontal distance between panel objects in points (default to \code{10}).}
-\item{...}{Other graphical parameters passed to \code{\link{par}}.}
+\item{...}{Other graphical parameters passed to \code{\link[graphics]{par}}.}
 }
 \details{
-The only mandatory argument of the function is a fitted-model object of class \code{\link{glm}}. For this object the following prerequisites must be met:
+The only mandatory argument of the function is a fitted-model object of class \code{\link[stats]{glm}}. For this object the following prerequisites must be met:
 \itemize{
 \item{The model must contain at least one metric covariate.}
 \item{The model must be specified with the formula interface and the data frame containing the variables must be passed with the \code{data} argument.}
-\item{The categorical variables must be \code{\link{factor}}s (ordered or unordered).}
+\item{The categorical variables must be \code{\link[base]{factor}}s (ordered or unordered).}
 }
-Please refer to the documentation of \code{\link{fxInteractive}} or the vignette for more details.
+Please refer to the documentation of \code{\link[LinRegInteractive]{fxInteractive}} or the vignette for more details.
 }
 \value{
-No object is returned, please refer to the documentation of \code{\link{fxInteractive}} or the vignette for more details.
+No object is returned, please refer to the documentation of \code{\link[LinRegInteractive]{fxInteractive}} or the vignette for more details.
 }
 \references{
 Hoetker, G. (2007). The use of logit and probit models in strategic management research: Critical

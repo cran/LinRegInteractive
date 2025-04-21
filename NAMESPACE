@@ -8,6 +8,7 @@ export(
   "factorCombinations"
 )
 
+S3method("fxInteractive", "default")
 S3method("fxInteractive", "lm")
 S3method("fxInteractive", "glm")
 S3method("fxInteractive", "lme")

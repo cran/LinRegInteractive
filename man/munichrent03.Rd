@@ -24,7 +24,7 @@ Sample of 2,053 appartments from the data collected for the preparation of the M
   }
 }
 \source{
-\url{https://doi.org/10.5282/ubm/data.2}
+\doi{https://doi.org/10.5282/ubm/data.2}
 }
 \references{
 Fahrmeir, L., Kneib, T., Lang, S., Marx, B. (2013): \emph{Regression: Models, Methods and Applications}. Berlin: Springer.

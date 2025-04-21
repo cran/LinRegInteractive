@@ -21,7 +21,7 @@ Stratified sample of 1,000 credit receivers (in the following \emph{cr}) from a 
     \item{\code{housdur}}{For which period does the cr lives in current housing? Ordered factor with levels "\code{max1y}" (less than 1 year), "\code{max4y}" (between 1 and 4 years), "\code{max7y}" (between 4 and 7 years) and "\code{min7y}" (more than 7 years).}
     \item{\code{housing}}{Accommodation of the cr. Ordered factor with levels "\code{social}" (social accommodation), "\code{rent}" (rented accommodation) and "\code{freehold}" (freehold accommodation).}
     \item{\code{immigrant}}{Factor: Is the cr an immigrant?}
-	\item{\code{installment}}{Monthly installment in \% of disposable income.  Ordered factor with levels "\code{max20}" (installment is less than 20\% of disposable income), "\code{max25}" (installment is more than 20\% and less than 25\% of disposable income), "\code{max35}" (installment is more than 25\% and less than 35\% of disposable income) and "\code{min35}" (installment is more than 35\% of disposable income).}
+	  \item{\code{installment}}{Monthly installment in \% of disposable income.  Ordered factor with levels "\code{max20}" (installment is less than 20\% of disposable income), "\code{max25}" (installment is more than 20\% and less than 25\% of disposable income), "\code{max35}" (installment is more than 25\% and less than 35\% of disposable income) and "\code{min35}" (installment is more than 35\% of disposable income).}
     \item{\code{intuse}}{Intended usage for the credit. Factor with levels "\code{car-new}" (buy a new car), "\code{car-old}" (buy an used car), "\code{fittings}" (buy fittings), "\code{hifi}" (buy radio or TV), "\code{holiday}" (pay a holiday), "\code{househ}" (buy new household items), "\code{misc}" (miscellaneous activities), "\code{qualif}" (pay a new qualification), "\code{repair}" (repair something) and "\code{retrain}" (pay a retrain).}
     \item{\code{job}}{Employment status of the cr. Ordered factor with levels "\code{none}" (unemployed), "\code{unskilled}" (unskilled worker), "\code{medium}" (intermediate position) and "\code{higher}" (leading position).}
     \item{\code{martsex}}{Martial status and sex of the cr. Factor with levels "\code{f-div-m-sing}" (female-divorced and male-single), "\code{f-sing}" (female-single), "\code{m-div}" (male-divorced) and "\code{m-mar}" (male-married).}
@@ -33,7 +33,7 @@ Stratified sample of 1,000 credit receivers (in the following \emph{cr}) from a 
   }
 }
 \source{
-\url{https://doi.org/10.5282/ubm/data.23}
+\doi{https://doi.org/10.5282/ubm/data.23}
 }
 \references{
 Fahrmeir, L., Hamerle, A., Tutz, G. (1996): \emph{Multivariate statistische Verfahren}, 2nd edition. Berlin: de Gruyter. 390 ff.

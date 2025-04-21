@@ -1,10 +1,12 @@
 Package: LinRegInteractive
 Type: Package
 Title: Interactive Interpretation of Linear Regression Models
-Version: 0.3-3
-Date: 2020-02-08
-Author: Martin Meermeyer
-Maintainer: Martin Meermeyer <m.meermeyer@gmail.com>
+Version: 0.3-4
+Date: 2025-04-20
+Authors@R: person(given  = "Martin",
+                  family = "Meermeyer",
+                  role   = c("aut", "cre"),
+                  email  = "m.meermeyer@gmail.com")
 Description: Interactive visualization of effects, response functions 
     and marginal effects for different kinds of regression models. In this version 
     linear regression models, generalized linear models, generalized additive
@@ -18,6 +20,8 @@ License: GPL-2
 Depends: R (>= 3.0.0), rpanel (>= 1.1-4), xtable
 Suggests: AER, gam, mgcv, nlme
 NeedsCompilation: no
-Packaged: 2020-02-08 16:42:09 UTC; Martin
+Packaged: 2025-04-21 08:18:35 UTC; marti
+Author: Martin Meermeyer [aut, cre]
+Maintainer: Martin Meermeyer <m.meermeyer@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-02-08 17:00:02 UTC
+Date/Publication: 2025-04-21 08:30:07 UTC

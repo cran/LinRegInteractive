@@ -785,8 +785,9 @@ font.main      = 1)
 \begin{tabular}{lll}
 \toprule
 Version & Date published & Changes                                           \\ \midrule
+0.3-4   & 2025-04-20     & issue with $\backslash$\texttt{link} in rd-files fixed \\ \midrule
 0.3-3   & 2020-02-08     & issue with vignette fixed \\ \midrule
-0.3-2   & 2020-01-13     & issue with hidden slider control fixed \\ 
+0.3-2   & 2020-01-13     & issue with hidden slider control fixed \\
         &                & minor changes in default layout parameters for the control panel \\
         &                & update of references \\ \midrule
 0.3-1   & 2015-04-22     & update of contact details \\ \midrule

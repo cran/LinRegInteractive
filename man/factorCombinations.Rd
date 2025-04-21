@@ -4,14 +4,14 @@
 Combine Levels of Different Factors to Groups
 }
 \description{
-All levels of the factors from a \code{\link{data.frame}} provided are combined, each combination of factor levels is referred to as \emph{group}.
+All levels of the factors from a \code{\link[base]{data.frame}} provided are combined, each combination of factor levels is referred to as \emph{group}.
 }
 \usage{
 factorCombinations(X, factor.sep = "|", level.sep = ".", count=TRUE)
 }
 \arguments{
   \item{X}{
-A \code{\link{data.frame}} containing at least one factor.
+A \code{\link[base]{data.frame}} containing at least one factor.
 }
 \item{factor.sep}{Character by which the factor-factor level combinations are separated in the group names.}
 \item{level.sep}{Character by which the level names are separated from the corresponding factor names in the group names.}
